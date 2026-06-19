@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: THE ARCADE :: Hooligans Portal ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  .game-wrap{ background:#000; border:2px solid var(--red); box-shadow:0 0 0 1px #000, 0 0 24px rgba(196,22,28,0.4); }
+  .game-head{ background:linear-gradient(180deg,var(--red),var(--red-deep)); color:#fff; font-family:Impact,sans-serif; padding:6px 10px; display:flex; justify-content:space-between; align-items:center; }
+  #gameCanvas{ display:block; width:100%; background:#0c0c0c; image-rendering:pixelated; touch-action:manipulation; }
+  .game-foot{ padding:8px 10px; font-size:11px; color:var(--steel-dim); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  .score-now{ font-family:Impact,sans-serif; color:var(--amber); font-size:16px; }
+  .hs-table{ width:100%; border-collapse:collapse; }
+  .hs-table td{ border-bottom:1px solid #222; padding:4px 6px; font-size:12px; }
+  .hs-table .rk{ color:var(--amber); font-family:Impact,sans-serif; width:26px; text-align:center; }
+  .hs-table .who b{ color:#fff; } .hs-table .sc{ text-align:right; color:var(--cyan); font-family:Impact,sans-serif; }
+  .playbtn{ background:var(--teal); color:#fff; border:1px solid #000; font-family:Impact,sans-serif; font-size:13px; padding:7px 16px; cursor:pointer; }
+  .playbtn:hover{ background:#0c5a51; }
+  .note{ font-size:11px; color:var(--steel-dim); }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links">
+    <a href="index.html">Home</a><a href="crew.html">Crew</a><a href="ads.html">Sponsors</a><a href="chat.html">Live Chat</a><a href="arcade.html">Arcade</a><a href="guestbook.html">Guestbook</a>
+  </div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="masthead">
+  <div class="logo" data-cfg="siteTitle">HOOLI<span class="gg">GANS</span><span class="dot">.</span></div>
+  <div class="tagline-mini" data-cfg="siteTagline"></div>
+</div>
+<div class="flame-rule"></div>
+
+<nav class="topnav">
+  <a href="index.html">HOME</a><a href="crew.html">THE CREW</a><a href="ads.html">SPONSORS</a><a href="chat.html">LIVE CHAT</a><a href="arcade.html">ARCADE</a><a href="guestbook.html">GUESTBOOK</a>
+</nav>
+
+<div class="marq"><div class="marq-t"><span class="i" data-cfg="marqueeText"></span><span class="i" data-cfg="marqueeText"></span></div></div>
+
+<div class="portal">
+  <div class="col-left">
+    <div class="box"><div class="box-h">THE ARCADE</div><div class="box-b" style="font-size:11px;">
+      <b style="color:#fff;">DINO DASH</b><br>Jump the cacti. Don't die. Beat the crew.<br><br>
+      <span class="note">Press SPACE / ↑ / tap to jump. Log in to save your high score to your profile.</span>
+    </div></div>
+    <div data-ad-slot data-ad-count="2" data-ad-offset="0"></div>
+  </div>
+
+  <div class="col-main">
+    <div class="game-wrap">
+      <div class="game-head"><span>★ DINO DASH</span><span class="score-now">SCORE: <span id="scoreNow">0</span></span></div>
+      <canvas id="gameCanvas" width="600" height="200"></canvas>
+      <div class="game-foot">
+        <div>HI (you): <b id="myHi" style="color:var(--amber);">0</b> &nbsp; | &nbsp; <span id="saveState" class="note"></span></div>
+        <button class="playbtn" id="playBtn">START / RESTART</button>
+      </div>
+    </div>
+    <div class="note" style="margin-top:6px;">Tip: the longer you survive, the faster it gets. GBD.</div>
+  </div>
+
+  <div class="col-right">
+    <div class="box">
+      <div class="box-h teal">★ TOP SCORES</div>
+      <div class="box-b" style="padding:0;">
+        <table class="hs-table" id="hsTable"><tr><td class="note" style="padding:10px;">loading...</td></tr></table>
+      </div>
+    </div>
+    <div data-ad-slot data-ad-count="1" data-ad-offset="2"></div>
+  </div>
+</div>
+
+<div class="foot">
+  <div data-cfg="footerLine1"></div>
+  <div data-cfg="footerLine2" style="margin-top:3px;"></div>
+  <div style="margin-top:8px;"><a id="adminLink" class="admin-dot" href="javascript:void(0)">·</a></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="chief.js"></script>
+<script src="arcade.js"></script>
+</body>
+</html>

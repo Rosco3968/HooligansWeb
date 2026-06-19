@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: LIVE CHAT :: Hooligans Portal ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  .chat-wrap{ background:#000; border:2px solid var(--red); box-shadow:0 0 0 1px #000; display:flex; flex-direction:column; height:440px; }
+  .chat-head{ background:linear-gradient(180deg,var(--red),var(--red-deep)); color:#fff; font-family:Impact,sans-serif; padding:6px 10px; display:flex; justify-content:space-between; }
+  .chat-msgs{ flex:1; overflow-y:auto; padding:10px; font-size:12px; background:#0c0c0c; }
+  .cmsg{ margin-bottom:9px; line-height:1.35; }
+  .cmsg .who{ font-family:Impact,sans-serif; }
+  .cmsg .tm{ color:var(--steel-dim); font-size:9px; margin-left:5px; }
+  .cmsg img.cimg{ max-width:180px; max-height:160px; border:1px solid #333; display:block; margin-top:3px; }
+  .cmsg .del{ color:var(--red); font-size:9px; cursor:pointer; margin-left:6px; }
+  .chat-in{ display:flex; border-top:2px solid var(--red); background:#111; }
+  .chat-in input#cmsgInput{ flex:1; background:#000; color:var(--steel); border:none; padding:10px; font-family:Verdana,sans-serif; font-size:13px; }
+  .chat-in button{ background:var(--teal); color:#fff; border:none; padding:0 14px; font-family:Impact,sans-serif; cursor:pointer; }
+  .chat-in button:hover{ background:#0c5a51; }
+  .chat-tools{ display:flex; gap:4px; padding:5px; background:#111; border-top:1px solid #2a2a2a; flex-wrap:wrap; }
+  .tool-btn{ background:#222; color:var(--steel); border:1px solid #333; font-size:12px; padding:4px 9px; cursor:pointer; border-radius:3px; }
+  .tool-btn:hover{ background:var(--red); color:#fff; }
+  .emoji-pop, .gif-pop{ display:none; background:#1a1a1a; border:1px solid var(--red); padding:7px; max-height:170px; overflow-y:auto; }
+  .emoji-pop.on, .gif-pop.on{ display:block; }
+  .emoji-pop span{ font-size:20px; cursor:pointer; padding:2px 4px; display:inline-block; }
+  .emoji-pop span:hover{ background:#333; border-radius:3px; }
+  .gif-search-row{ display:flex; gap:5px; margin-bottom:6px; }
+  .gif-search-row input{ flex:1; background:#000; color:var(--steel); border:1px solid #444; padding:5px; }
+  .gif-search-row button{ background:var(--teal); color:#fff; border:none; padding:5px 10px; font-family:Impact,sans-serif; cursor:pointer; }
+  .gif-results{ display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+  .gif-results img{ width:100%; height:60px; object-fit:cover; cursor:pointer; border:1px solid #333; }
+  .gif-results img:hover{ border-color:var(--cyan); }
+  .loginnote{ background:var(--panel); border:1px solid var(--red); padding:10px; font-size:12px; color:var(--steel); margin-bottom:8px; }
+  .secret-hint{ font-size:10px; color:var(--steel-dim); font-style:italic; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links">
+    <a href="index.html">Home</a><a href="crew.html">Crew</a><a href="ads.html">Sponsors</a><a href="chat.html">Live Chat</a><a href="arcade.html">Arcade</a><a href="guestbook.html">Guestbook</a>
+  </div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="masthead">
+  <div class="logo" data-cfg="siteTitle">HOOLI<span class="gg">GANS</span><span class="dot">.</span></div>
+  <div class="tagline-mini" data-cfg="siteTagline"></div>
+</div>
+<div class="flame-rule"></div>
+
+<nav class="topnav">
+  <a href="index.html">HOME</a><a href="crew.html">THE CREW</a><a href="ads.html">SPONSORS</a><a href="chat.html">LIVE CHAT</a><a href="arcade.html">ARCADE</a><a href="guestbook.html">GUESTBOOK</a>
+</nav>
+
+<div class="marq"><div class="marq-t"><span class="i" data-cfg="marqueeText"></span><span class="i" data-cfg="marqueeText"></span></div></div>
+
+<div class="portal">
+  <div class="col-left">
+    <div class="box"><div class="box-h">LIVE CHAT</div><div class="box-b" style="font-size:11px;">
+      Real-time crew chat. Drop text, emojis, image links, and GIFs.<br><br>
+      <span class="secret-hint">they say there's a second, secret room somewhere on this site...</span>
+    </div></div>
+    <div data-ad-slot data-ad-count="2" data-ad-offset="2"></div>
+  </div>
+
+  <div class="col-main">
+    <div id="chatLoginNote" class="loginnote" style="display:none;">
+      Log in (JOIN up top) to chat as yourself. You can read along either way.
+    </div>
+    <div class="chat-wrap">
+      <div class="chat-head"><span>★ HOOLIGAN LIVE CHAT</span><span id="chatWho" style="font-size:11px;"></span></div>
+      <div class="chat-msgs" id="chatMsgs"></div>
+      <div class="emoji-pop" id="emojiPop"></div>
+      <div class="gif-pop" id="gifPop">
+        <div class="gif-search-row">
+          <input type="text" id="gifQuery" placeholder="search GIFs (e.g. limp bizkit)">
+          <button id="gifGo">GO</button>
+        </div>
+        <div class="gif-results" id="gifResults"><span class="secret-hint">type something and hit GO</span></div>
+      </div>
+      <div class="chat-tools">
+        <button class="tool-btn" id="emojiBtn">😀 emoji</button>
+        <button class="tool-btn" id="gifBtn">🎞️ GIF</button>
+        <button class="tool-btn" id="imgBtn">🖼️ image link</button>
+      </div>
+      <div class="chat-in">
+        <input type="text" id="cmsgInput" placeholder="say something, Spartan...">
+        <button id="cmsgSend">SEND</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-right">
+    <div class="box"><div class="box-h teal">CHAT RULES</div><div class="box-b" style="font-size:11px;">
+      <ul class="linklist">
+        <li>GBD or go home</li>
+        <li>GIFs encouraged</li>
+        <li>don't be a narc</li>
+        <li>admins can nuke msgs</li>
+      </ul>
+    </div></div>
+    <div data-ad-slot data-ad-count="1" data-ad-offset="0"></div>
+  </div>
+</div>
+
+<div class="foot">
+  <div data-cfg="footerLine1"></div>
+  <div data-cfg="footerLine2" style="margin-top:3px;"></div>
+  <div style="margin-top:8px;"><a id="adminLink" class="admin-dot" href="javascript:void(0)">·</a></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="chief.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>

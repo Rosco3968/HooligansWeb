@@ -1,0 +1,266 @@
+/* ===================================================================
+   HOOLIGANS PORTAL — theme.css
+   GameSpot-2003 density × Halo/UNSC metal × 90s-anime energy
+   =================================================================== */
+
+:root{
+  --black: #0a0a0a;
+  --panel: #141414;
+  --red: #c4161c;
+  --red-deep: #7a0a0e;
+  --red-dark: #4a0608;
+  --teal: #1b9e8f;
+  --cyan: #19d3ff;
+  --amber: #ffb000;
+  --steel: #cfd6e0;
+  --steel-dim: #8b94a3;
+  --ink: #1a1a1a;
+  --paper: #f4f1e8;
+  --line: #2a2a2a;
+  /* admin/theme-overridable accents */
+  --accent: var(--red);
+  --accent2: var(--cyan);
+}
+
+*{ box-sizing: border-box; }
+html,body{ margin:0; padding:0; }
+
+body{
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 12px;
+  color: var(--steel);
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at top, #1a0305 0%, #0a0a0a 60%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+a{ color: var(--cyan); text-decoration: none; }
+a:hover{ color: var(--amber); text-decoration: underline; }
+
+/* ===== top utility bar (like GameSpot's account strip) ===== */
+.util-bar{
+  background: linear-gradient(180deg, #2a2a2a, #111);
+  border-bottom: 2px solid var(--red);
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 4px 10px; font-size: 11px; gap:10px; flex-wrap:wrap;
+}
+.util-bar .util-links a{ color: var(--steel); margin-right: 12px; font-weight:bold; }
+.util-bar .util-links a:hover{ color: var(--cyan); }
+.util-account{ display:flex; align-items:center; gap:6px; }
+.util-account input{
+  background:#000; border:1px solid #444; color:var(--steel);
+  font-size:11px; padding:3px 5px; width:90px;
+}
+.util-account button{
+  background: var(--red); color:#fff; border:1px solid #000;
+  font-family:Impact,sans-serif; font-size:11px; padding:3px 8px; cursor:pointer;
+}
+.util-account button:hover{ background: var(--red-deep); }
+
+/* ===== masthead ===== */
+.masthead{
+  background:
+    repeating-linear-gradient(90deg, rgba(196,22,28,0.5) 0 2px, transparent 2px 6px),
+    linear-gradient(180deg, #1a1a1a, #000);
+  border-bottom: 3px solid var(--red);
+  padding: 10px 14px;
+  display:flex; align-items:center; gap:16px;
+  position:relative; overflow:hidden;
+}
+.masthead::after{
+  /* anime speed-lines sweeping across */
+  content:''; position:absolute; inset:0;
+  background: repeating-linear-gradient(115deg, transparent 0 40px, rgba(25,211,255,0.04) 40px 42px);
+  pointer-events:none;
+}
+.logo{
+  font-family: Impact, 'Arial Black', sans-serif;
+  font-style: italic;
+  font-size: clamp(30px, 6vw, 52px);
+  letter-spacing: -1px;
+  color: #fff;
+  text-shadow: 2px 2px 0 var(--red), 4px 4px 0 #000;
+  transform: skewX(-6deg);
+  white-space:nowrap;
+}
+.logo .gg{ color: var(--amber); }
+.logo .dot{ color: var(--cyan); }
+.tagline-mini{
+  font-size:10px; color:var(--steel-dim); font-style:italic;
+  border-left:2px solid var(--red); padding-left:8px; line-height:1.3;
+}
+
+/* ===== flame divider ===== */
+.flame-rule{
+  height: 14px;
+  background:
+    repeating-linear-gradient(90deg, var(--red) 0 8px, var(--amber) 8px 12px, var(--red-deep) 12px 20px);
+  border-top:1px solid #000; border-bottom:1px solid #000;
+  opacity:0.9;
+}
+
+/* ===== main nav tabs ===== */
+.topnav{
+  background:#000; display:flex; flex-wrap:wrap;
+  border-bottom: 2px solid var(--red);
+}
+.topnav a{
+  color:#fff; font-family:Impact,sans-serif; font-weight:normal;
+  font-size:13px; letter-spacing:0.5px; padding:8px 14px;
+  border-right:1px solid #2a2a2a;
+}
+.topnav a:hover{ background: var(--red); color:#fff; text-decoration:none; }
+.topnav a.active{ background: var(--red-deep); color: var(--amber); }
+
+/* ===== 3-column portal layout ===== */
+.portal{
+  display:grid;
+  grid-template-columns: 168px 1fr 200px;
+  gap: 8px;
+  max-width: 1100px;
+  margin: 8px auto;
+  padding: 0 8px 40px;
+  align-items:start;
+}
+@media (max-width: 880px){
+  .portal{ grid-template-columns: 1fr; }
+  .col-left, .col-right{ order: 3; }
+  .col-main{ order: 1; }
+}
+
+/* ===== boxes (the beveled GameSpot tables) ===== */
+.box{
+  background: var(--panel);
+  border: 1px solid #000;
+  box-shadow: inset 0 0 0 1px #2e2e2e, 0 1px 0 #000;
+  margin-bottom: 8px;
+}
+.box-h{
+  background: linear-gradient(180deg, var(--red), var(--red-deep));
+  color:#fff; font-family:Impact,sans-serif; font-size:12px;
+  letter-spacing:0.5px; padding:4px 8px;
+  border-bottom:1px solid #000;
+  display:flex; align-items:center; justify-content:space-between;
+  text-shadow:1px 1px 0 rgba(0,0,0,0.5);
+}
+.box-h.teal{ background: linear-gradient(180deg, var(--teal), #0c5a51); }
+.box-b{ padding: 7px 8px; }
+
+/* link lists in side rails (dense, categorized) */
+.linklist{ list-style:none; margin:0; padding:0; }
+.linklist li{
+  border-bottom:1px dotted #333; padding:3px 2px 3px 12px; position:relative;
+}
+.linklist li::before{
+  content:'»'; position:absolute; left:1px; color:var(--red); font-weight:bold;
+}
+.linklist li:last-child{ border-bottom:none; }
+.linklist a{ color: var(--steel); font-size:11px; }
+.linklist a:hover{ color: var(--cyan); }
+
+.cat-h{
+  background:#000; color:var(--amber); font-family:Impact,sans-serif;
+  font-size:11px; padding:3px 8px; margin-top:6px; border-left:3px solid var(--red);
+}
+
+/* ===== hero banner ===== */
+.hero{
+  position:relative; border:1px solid #000; overflow:hidden;
+  background: linear-gradient(135deg, var(--red-deep), #000 70%);
+  min-height: 150px; display:flex; align-items:flex-end;
+}
+.hero-art{
+  position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(60deg, transparent 0 18px, rgba(0,0,0,0.25) 18px 20px),
+    repeating-conic-gradient(from 0deg at 80% 30%, rgba(25,211,255,0.12) 0 6deg, transparent 6deg 12deg);
+}
+.hero-tag{
+  position:absolute; top:8px; left:8px;
+  background: var(--cyan); color:#000; font-family:Impact,sans-serif;
+  font-size:10px; padding:2px 7px; transform: skewX(-8deg);
+}
+.hero-body{ position:relative; padding:12px; z-index:1; }
+.hero-title{
+  font-family:Impact,sans-serif; font-style:italic; font-size: clamp(20px,4vw,34px);
+  color:#fff; text-shadow:2px 2px 0 #000; margin:0; line-height:1;
+}
+.hero-sub{ color:var(--steel); font-size:12px; margin-top:4px; max-width:60ch; }
+
+/* preview thumbnails row */
+.thumbrow{ display:grid; grid-template-columns: repeat(auto-fit,minmax(110px,1fr)); gap:6px; margin:8px 0; }
+.thumb{
+  border:1px solid #000; background:#000; position:relative; overflow:hidden;
+  aspect-ratio: 4/3; display:flex; align-items:flex-end;
+}
+.thumb .thumb-art{ position:absolute; inset:0; }
+.thumb .thumb-tag{
+  position:absolute; top:0; left:0; background:var(--teal); color:#000;
+  font-family:Impact,sans-serif; font-size:9px; padding:1px 5px;
+}
+.thumb .thumb-cap{
+  position:relative; width:100%; background:rgba(0,0,0,0.8); color:#fff;
+  font-size:10px; font-weight:bold; padding:3px 5px;
+}
+
+/* ===== ranked list (today's top games style) ===== */
+.ranklist{ width:100%; border-collapse:collapse; }
+.ranklist td{ border-bottom:1px solid #222; padding:5px 6px; font-size:11px; vertical-align:top; }
+.ranklist .rk{ color:var(--amber); font-family:Impact,sans-serif; font-size:15px; width:22px; text-align:center; }
+.ranklist .gm b{ color:#fff; font-size:12px; }
+.ranklist .gm span{ color:var(--steel-dim); }
+
+/* ===== ad banners (side rail) ===== */
+.ad{
+  border:2px solid #000; margin-bottom:8px; background:#000;
+  position:relative; overflow:hidden; cursor:pointer;
+  box-shadow: 0 0 0 1px var(--red);
+}
+.ad:hover{ box-shadow: 0 0 0 1px var(--cyan), 0 0 10px rgba(25,211,255,0.4); }
+.ad-tag{ background:#000; color:var(--amber); font-size:8px; font-family:Impact,sans-serif; padding:1px 5px; letter-spacing:1px; }
+.ad-art{
+  height:90px; display:flex; align-items:center; justify-content:center; position:relative;
+  color:#fff; text-align:center; overflow:hidden;
+}
+.ad-art .ad-rays{ position:absolute; inset:-30%; background: repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,0.18) 0 8deg, transparent 8deg 16deg); animation: spin 20s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.ad-icon{ position:relative; z-index:1; font-size:34px; filter:drop-shadow(2px 2px 0 rgba(0,0,0,0.5)); }
+.ad-photo{ position:relative; z-index:1; width:100%; height:100%; object-fit:cover; }
+.ad-cap{ background:#fff; color:#000; padding:5px 6px; }
+.ad-cap b{ font-family:Impact,sans-serif; font-size:13px; display:block; line-height:1.05; }
+.ad-cap span{ font-size:10px; color:#444; }
+.ad-cta{ display:inline-block; margin-top:3px; background:var(--red); color:#fff; font-family:Impact,sans-serif; font-size:10px; padding:2px 7px; }
+.ad-star{
+  position:absolute; top:4px; right:4px; z-index:2; background:var(--amber); color:#000;
+  font-family:Impact,sans-serif; font-size:8px; width:32px; height:32px;
+  display:flex; align-items:center; justify-content:center; text-align:center; line-height:1;
+  clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  transform: rotate(-10deg);
+}
+.blink{ animation: blink 1s steps(1) infinite; }
+@keyframes blink{ 50%{ opacity:0; } }
+
+/* ===== marquee ===== */
+.marq{ background:#000; border-top:1px solid var(--red); border-bottom:1px solid var(--red); overflow:hidden; padding:3px 0; }
+.marq-t{ display:inline-block; white-space:nowrap; animation: scrollL 18s linear infinite; font-family:Impact,sans-serif; font-size:12px; color:var(--amber); }
+.marq-t .i{ padding:0 2em; }
+@keyframes scrollL{ 0%{ transform:translateX(0); } 100%{ transform:translateX(-50%); } }
+
+/* ===== footer ===== */
+.foot{
+  background:#000; border-top:3px solid var(--red); margin-top:20px;
+  padding:14px 10px 30px; text-align:center; font-size:10px; color:var(--steel-dim);
+}
+.foot a{ color:var(--steel-dim); margin:0 6px; }
+.foot .admin-dot{ color:#1a1a1a; font-size:11px; }
+.foot .admin-dot:hover{ color:var(--amber); }
+
+/* ===== custom cursor handled in JS via body class ===== */
+
+/* ===== scrollbars ===== */
+::-webkit-scrollbar{ width:12px; }
+::-webkit-scrollbar-track{ background:#111; }
+::-webkit-scrollbar-thumb{ background: var(--red-deep); border:1px solid #000; }
+::-webkit-scrollbar-thumb:hover{ background: var(--red); }
