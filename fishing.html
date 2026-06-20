@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: Fishing Trip :: Hooligans Arcade ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  body{ background:#06121a; }
+  .fish-wrap{ max-width:720px; margin:10px auto; padding:0 10px 40px; }
+  .fish-topbar{ display:flex; justify-content:space-between; align-items:center; background:#000; border:2px solid #1b9e8f; padding:7px 12px; margin-bottom:8px; font-family:Impact,sans-serif; }
+  .fish-topbar a{ color:#19d3ff; font-size:12px; }
+  .lvl-pill{ color:#ffd700; font-size:13px; }
+  .mute-btn{ background:#0a2a30; color:#19d3ff; border:1px solid #19d3ff; font-family:Impact,sans-serif; font-size:11px; padding:4px 9px; cursor:pointer; }
+
+  /* ===== INTRO SCREEN ===== */
+  #introScreen{ position:relative; width:100%; aspect-ratio:16/10; background:#1a2f4a; border:3px solid #0a4a55; border-radius:6px; overflow:hidden; cursor:pointer; }
+  #introCanvas{ display:block; width:100%; height:100%; }
+  .intro-title{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
+  .intro-title h1{ font-family:Impact,sans-serif; font-style:italic; font-size:clamp(26px,6.5vw,48px); color:#fff; text-shadow:3px 3px 0 #0a4a55, 0 0 30px rgba(255,180,60,0.6); margin:0; letter-spacing:1px; white-space:nowrap; }
+  .intro-title .sub{ color:#ffd9a0; font-size:13px; margin-top:6px; text-shadow:1px 1px 2px #000; letter-spacing:2px; }
+  .intro-tap{ position:absolute; bottom:14px; left:50%; transform:translateX(-50%); color:#fff; font-family:Impact,sans-serif; font-size:13px; opacity:0.85; animation:tapPulse 1.4s ease-in-out infinite; text-shadow:1px 1px 2px #000; }
+  @keyframes tapPulse{ 50%{ opacity:0.3; } }
+
+  /* ===== GAME SCENE ===== */
+  #gameScreen{ display:none; position:relative; width:100%; aspect-ratio:16/10; background:#0a1a2a; border:3px solid #0a4a55; border-radius:6px; overflow:hidden; }
+  #fishCanvas{ display:block; width:100%; height:100%; }
+  .hud{ position:absolute; top:8px; left:8px; right:8px; display:flex; justify-content:space-between; font-family:Impact,sans-serif; color:#fff; text-shadow:1px 1px 2px #000; font-size:12px; pointer-events:none; }
+  .hud .lvltag{ color:#ffd700; }
+  .promptbar{ position:absolute; bottom:10px; left:50%; transform:translateX(-50%); text-align:center; color:#fff; font-family:Impact,sans-serif; font-size:15px; text-shadow:1px 1px 3px #000; pointer-events:none; }
+  .castbtn{ position:absolute; bottom:10px; left:50%; transform:translateX(-50%); background:linear-gradient(180deg,#ffd700,#b8860b); color:#000; border:3px solid #000; border-radius:24px; font-family:Impact,sans-serif; font-size:15px; padding:10px 26px; cursor:pointer; box-shadow:0 4px 0 #5a4310; }
+  .castbtn:active{ transform:translateX(-50%) translateY(3px); box-shadow:0 1px 0 #5a4310; }
+
+  /* bite minigame: a moving target zone + a marker you tap to time */
+  .bitebar{ position:absolute; bottom:46px; left:10%; right:10%; height:18px; background:rgba(0,0,0,0.5); border:2px solid #fff; border-radius:10px; overflow:hidden; }
+  .bitebar .zone{ position:absolute; top:0; bottom:0; background:rgba(62,224,138,0.6); }
+  .bitebar .marker{ position:absolute; top:-3px; bottom:-3px; width:4px; background:#fff; box-shadow:0 0 6px #fff; }
+
+  /* reel minigame: a vertical tension bar */
+  .reelwrap{ position:absolute; right:14px; top:50%; transform:translateY(-50%); width:26px; height:60%; background:rgba(0,0,0,0.5); border:2px solid #fff; border-radius:14px; overflow:hidden; }
+  .reelwrap .fishpos{ position:absolute; left:2px; right:2px; height:10%; background:#ff5555; border-radius:6px; }
+  .reelwrap .safe{ position:absolute; left:0; right:0; height:26%; background:rgba(62,224,138,0.35); border-top:1px solid #3ee08a; border-bottom:1px solid #3ee08a; }
+  .tension{ position:absolute; left:36px; top:50%; transform:translateY(-50%); width:140px; height:14px; background:#000; border:2px solid #ffd700; border-radius:8px; overflow:hidden; }
+  .tension .fill{ height:100%; background:linear-gradient(90deg,#3ee08a,#ffd700,#ff5555); width:0%; }
+
+  /* result card */
+  #catchCard{ display:none; position:absolute; inset:0; background:rgba(0,0,0,0.88); flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:16px; }
+  #catchCard .ci{ font-size:60px; }
+  #catchCard .cn{ font-family:Impact,sans-serif; font-size:22px; color:#fff; margin-top:6px; }
+  #catchCard .cr{ font-family:Impact,sans-serif; font-size:13px; margin-top:2px; }
+  #catchCard .cx{ color:#3ee08a; font-size:13px; margin-top:8px; }
+  #catchCard .cnew{ color:#ffd700; font-family:Impact,sans-serif; font-size:12px; margin-top:4px; }
+  #catchCard button{ margin-top:16px; background:#1b9e8f; color:#fff; border:1px solid #000; font-family:Impact,sans-serif; padding:9px 22px; cursor:pointer; }
+
+  .progress-box{ background:#0a1a2a; border:2px solid #1b9e8f; padding:10px 14px; margin-top:10px; }
+  .progress-box .pbar{ background:#000; border:1px solid #19d3ff; height:14px; border-radius:8px; overflow:hidden; margin-top:6px; }
+  .progress-box .pbar .f{ height:100%; background:linear-gradient(90deg,#19d3ff,#3ee08a); }
+  .escape-note{ color:#888; font-size:10px; text-align:center; margin-top:6px; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links"><a href="index.html">Home</a><a href="arcade.html">Arcade</a><a href="casino.html">Casino</a><a href="fishing-collection.html">Collection 📖</a></div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="fish-wrap">
+  <div class="fish-topbar">
+    <a href="arcade.html">← back to Arcade</a>
+    <span class="lvl-pill" id="lvlPill">Lv.1 Angler</span>
+    <button class="mute-btn" id="muteBtn">🔊 MUSIC ON</button>
+  </div>
+
+  <div id="introScreen">
+    <canvas id="introCanvas" width="800" height="500"></canvas>
+    <div class="intro-title">
+      <h1>FISHING TRIP</h1>
+      <div class="sub">tap to begin</div>
+    </div>
+    <div class="intro-tap">▼ TAP ANYWHERE ▼</div>
+  </div>
+
+  <div id="gameScreen">
+    <canvas id="fishCanvas" width="800" height="500"></canvas>
+    <div class="hud"><span>🎣 <span id="rodLine">ready</span></span><span class="lvltag" id="hudLevel">Lv.1</span></div>
+    <button class="castbtn" id="castBtn">CAST 🎣</button>
+    <div class="bitebar" id="biteBar" style="display:none;"><div class="zone" id="biteZone"></div><div class="marker" id="biteMarker"></div></div>
+    <div class="reelwrap" id="reelWrap" style="display:none;"><div class="safe" id="reelSafe"></div><div class="fishpos" id="reelFish"></div></div>
+    <div class="tension" id="tensionWrap" style="display:none;"><div class="fill" id="tensionFill"></div></div>
+    <div class="promptbar" id="promptBar"></div>
+    <div id="catchCard">
+      <div class="ci" id="catchIcon">🐟</div>
+      <div class="cn" id="catchName">Bluegill</div>
+      <div class="cr" id="catchRarity">Common</div>
+      <div class="cx" id="catchXp">+5 XP</div>
+      <div class="cnew" id="catchNew"></div>
+      <button id="catchContinue">CONTINUE</button>
+    </div>
+  </div>
+
+  <div class="progress-box">
+    <div style="display:flex; justify-content:space-between; font-family:Impact,sans-serif; color:#fff; font-size:12px;">
+      <span id="xpLabel">0 / 60 XP</span><span id="collectedLabel">0 / 30 species</span>
+    </div>
+    <div class="pbar"><div class="f" id="xpFill" style="width:0%;"></div></div>
+  </div>
+  <div class="escape-note">tap CAST → tap when the marker's in the green zone to hook a bite → keep the reel bar in the green to land it</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="shop.js"></script>
+<script src="fishing-data.js"></script>
+<script src="fishing-music.js"></script>
+<script src="fishing-sfx.js"></script>
+<script src="fishing.js"></script>
+</body>
+</html>

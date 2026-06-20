@@ -118,6 +118,9 @@ function initAuthState(){
     isAdmin = !!(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
     if(user){
       try{
+        if(window.storage && typeof window.storage._migrateOldProfile === 'function'){
+          await window.storage._migrateOldProfile(user.uid);
+        }
         const res = await window.storage.get(uidKey(user.uid), true);
         currentProfile = res && res.value ? JSON.parse(res.value) : defaultProfileFor(user);
       }catch(e){ currentProfile = defaultProfileFor(user); }

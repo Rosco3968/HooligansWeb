@@ -289,3 +289,8 @@ a:hover{ color: var(--amber); text-decoration: underline; }
 .flair-void{ color:#6a6a8a !important; text-shadow:0 0 8px #000,0 0 3px #9b30ff; }
 /* achievement badges */
 .ach-badge{ display:inline-flex; align-items:center; gap:4px; background:#0a0a0a; border:1px solid #ffd700; color:#ffd700; font-family:Impact,sans-serif; font-size:10px; padding:2px 6px; border-radius:3px; margin:2px; }
+
+/* ===== virtual pet on profile card ===== */
+.profile-pet{ display:flex; align-items:center; gap:8px; background:#0a120a; border:1px solid #1a3a1a; border-radius:6px; padding:6px 8px; margin-top:6px; }
+.profile-pet .pp-art{ width:42px; height:42px; flex:0 0 42px; background:radial-gradient(circle at 50% 40%, #1a2a1a, #0a120a); border-radius:5px; image-rendering:pixelated; }
+.profile-pet .pp-name{ font-family:Impact,sans-serif; color:#3ee08a; font-size:12px; }

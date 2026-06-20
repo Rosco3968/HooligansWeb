@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: Pet Shop :: Hooligans ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  body{ background:#0a0f0a; }
+  .pet-wrap{ max-width:760px; margin:14px auto; padding:0 12px 50px; }
+  .pet-head{ text-align:center; margin-bottom:12px; }
+  .pet-head h1{ font-family:Impact,sans-serif; color:#3ee08a; font-size:30px; margin:0; text-shadow:2px 2px 0 #000; }
+  .pet-head .sub{ color:#9ad0a0; font-size:12px; }
+  .coin-hud-bar{ background:#000; border:2px solid #3ee08a; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-family:Impact,sans-serif; }
+  #coinHud{ font-size:18px; color:#ffd700; }
+  .msg{ text-align:center; min-height:20px; font-family:Impact,sans-serif; margin-bottom:8px; }
+  .win{ color:#3ee08a; } .lose{ color:#ff6b6b; }
+  .pet-cat{ font-family:Impact,sans-serif; color:#3ee08a; font-size:15px; margin:14px 0 6px; border-bottom:1px solid #1a3a1a; }
+  .pet-row{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
+  .pet-item{ background:#0e160e; border:2px solid #1a3a1a; border-radius:8px; padding:12px; text-align:center; }
+  .pet-art{ width:90px; height:90px; margin:0 auto; background:radial-gradient(circle at 50% 40%, #1a2a1a, #0a120a); border:1px solid #1a3a1a; border-radius:8px; image-rendering:pixelated; }
+  .pet-name{ font-family:Impact,sans-serif; color:#fff; font-size:15px; margin-top:8px; }
+  .pet-blurb{ font-size:10px; color:#9ad0a0; margin:3px 0 8px; min-height:26px; }
+  .pet-btn{ background:#3ee08a; color:#062; border:1px solid #000; font-family:Impact,sans-serif; font-size:12px; padding:7px 10px; cursor:pointer; width:100%; }
+  .pet-btn:hover{ background:#5af0a0; } .pet-btn.equipped{ background:#ffd700; color:#000; }
+  .soldout{ color:#ff6b6b; font-family:Impact,sans-serif; font-size:12px; } .limited{ color:#ffd700; font-size:9px; }
+  .need-login{ color:#9ad0a0; text-align:center; padding:16px; }
+  .pet-note{ text-align:center; color:#6a8a6a; font-size:11px; margin-top:14px; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links"><a href="index.html">Home</a><a href="crew.html">Crew</a><a href="casino.html">Casino</a><a href="arcade.html">Arcade</a></div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="pet-wrap">
+  <div class="pet-head">
+    <h1>🐾 THE PET SHOP 🐾</h1>
+    <div class="sub">adopt a little buddy — it'll live on your profile</div>
+  </div>
+
+  <div class="coin-hud-bar"><span style="color:#9ad0a0;">YOUR COINS</span><span id="coinHud">—</span></div>
+  <div class="msg" id="petMsg"></div>
+  <div id="petGrid"></div>
+  <div class="pet-note">your active pet shows up on your profile card for everyone to see. switch anytime.</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="shop.js"></script>
+<script src="pets-data.js"></script>
+<script src="pets.js"></script>
+<script>
+  document.addEventListener('hooligan-auth', ()=>{ const el=document.getElementById('coinHud'); if(el&&currentUser) el.textContent='💰 '+getCoins()+' GBD'; });
+  document.addEventListener('portal-ready', ()=>{ const el=document.getElementById('coinHud'); if(el&&currentUser) el.textContent='💰 '+getCoins()+' GBD'; });
+</script>
+</body>
+</html>

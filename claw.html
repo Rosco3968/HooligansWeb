@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: Claw Machine :: Hooligans Arcade ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  body{ background:#120a1a; }
+  .claw-wrap{ max-width:560px; margin:12px auto; padding:0 10px 40px; }
+  .claw-top{ display:flex; justify-content:space-between; align-items:center; background:#000; border:2px solid #ff2da0; padding:7px 12px; margin-bottom:8px; font-family:Impact,sans-serif; }
+  .claw-top a{ color:#ff2da0; font-size:12px; }
+  .coinpill{ color:#ffd700; font-size:13px; }
+  .mute-btn{ background:#2a0a20; color:#ff2da0; border:1px solid #ff2da0; font-family:Impact,sans-serif; font-size:11px; padding:4px 9px; cursor:pointer; }
+
+  .cabinet{ background:linear-gradient(180deg,#ff2da0,#a01060); border:6px solid #ffd700; border-radius:16px 16px 10px 10px; padding:14px; box-shadow:0 0 40px rgba(255,45,160,0.4), inset 0 0 30px rgba(0,0,0,0.4); }
+  .cabinet-top{ text-align:center; font-family:Impact,sans-serif; color:#fff; font-size:26px; letter-spacing:2px; text-shadow:0 0 12px #ffd700; margin-bottom:4px; }
+  .marquee-lights{ display:flex; justify-content:center; gap:6px; margin-bottom:8px; }
+  .ml{ width:11px; height:11px; border-radius:50%; background:#ffd700; box-shadow:0 0 8px #ffd700; animation:mlb 0.8s steps(1) infinite; }
+  .ml:nth-child(2n){ background:#19d3ff; box-shadow:0 0 8px #19d3ff; animation-delay:.2s; }
+  .ml:nth-child(3n){ background:#fff; animation-delay:.4s; }
+  @keyframes mlb{ 50%{ opacity:.25; } }
+
+  #clawCanvas{ display:block; width:100%; background:linear-gradient(180deg,#1a1030,#0a0818); border:3px solid #6a2050; border-radius:8px; }
+
+  .controls{ display:flex; align-items:center; justify-content:space-between; margin-top:12px; gap:10px; }
+  .joystick{ position:relative; width:120px; height:120px; }
+  .joy-base{ position:absolute; inset:0; background:radial-gradient(circle at 50% 40%, #333, #111); border:3px solid #000; border-radius:50%; }
+  .joy-btn{ position:absolute; width:40px; height:40px; background:#222; border:2px solid #555; color:#fff; font-size:18px; cursor:pointer; border-radius:6px; display:flex; align-items:center; justify-content:center; user-select:none; }
+  .joy-btn:active{ background:#ff2da0; }
+  .joy-up{ top:0; left:40px; } .joy-down{ bottom:0; left:40px; } .joy-left{ top:40px; left:0; } .joy-right{ top:40px; right:0; }
+  .joy-center{ top:40px; left:40px; background:#444; border-radius:50%; }
+  .grab-side{ text-align:center; }
+  .grabbtn{ background:linear-gradient(180deg,#ff2da0,#a01060); color:#fff; border:3px solid #ffd700; border-radius:50%; width:96px; height:96px; font-family:Impact,sans-serif; font-size:18px; cursor:pointer; box-shadow:0 5px 0 #6a1040; }
+  .grabbtn:active{ transform:translateY(4px); box-shadow:0 1px 0 #6a1040; }
+  .grabbtn:disabled{ opacity:0.5; cursor:not-allowed; }
+  .play-cost{ text-align:center; color:#ffd9f0; font-size:11px; margin-top:8px; }
+  .clawmsg{ text-align:center; font-family:Impact,sans-serif; font-size:16px; min-height:22px; margin-top:8px; color:#fff; }
+  .win{ color:#3ee08a; } .lose{ color:#ff8888; }
+  .need-login{ background:#1a1030; border:1px solid #ff2da0; padding:12px; color:#ffd9f0; font-size:13px; text-align:center; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links"><a href="index.html">Home</a><a href="arcade.html">Arcade</a><a href="fishing-collection.html">Collection 📖</a></div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="claw-wrap">
+  <div class="claw-top">
+    <a href="arcade.html">← Arcade</a>
+    <span class="coinpill" id="coinHud">—</span>
+    <button class="mute-btn" id="muteBtn">🔊 MUSIC ON</button>
+  </div>
+
+  <div id="clawLogin" class="need-login" style="display:none;">Log in to play the claw machine (5 GBD per grab).</div>
+
+  <div id="clawGame" style="display:none;">
+    <div class="cabinet">
+      <div class="cabinet-top">CLAW KING</div>
+      <div class="marquee-lights"><span class="ml"></span><span class="ml"></span><span class="ml"></span><span class="ml"></span><span class="ml"></span><span class="ml"></span><span class="ml"></span><span class="ml"></span></div>
+      <canvas id="clawCanvas" width="500" height="360"></canvas>
+      <div class="controls">
+        <div class="joystick">
+          <div class="joy-base"></div>
+          <div class="joy-btn joy-up" id="joyUp">▲</div>
+          <div class="joy-btn joy-down" id="joyDown">▼</div>
+          <div class="joy-btn joy-left" id="joyLeft">◀</div>
+          <div class="joy-btn joy-right" id="joyRight">▶</div>
+          <div class="joy-btn joy-center">●</div>
+        </div>
+        <div class="grab-side">
+          <button class="grabbtn" id="grabBtn">DROP<br>CLAW</button>
+        </div>
+      </div>
+      <div class="play-cost">move the claw with the joystick · 5 GBD per grab · rarer prizes are heavier (harder to hold!)</div>
+    </div>
+    <div class="clawmsg" id="clawMsg">line up the claw and drop it</div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="shop.js"></script>
+<script src="fishing-data.js"></script>
+<script src="claw-data.js"></script>
+<script src="fishing-music.js"></script>
+<script src="fishing-sfx.js"></script>
+<script src="claw.js"></script>
+</body>
+</html>

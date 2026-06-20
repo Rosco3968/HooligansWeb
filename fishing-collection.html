@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: Collection Book :: Hooligans Arcade ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  body{ background:#1a120a; }
+  .book-wrap{ max-width:760px; margin:14px auto; padding:0 12px 50px; }
+  .book-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .book-top a{ color:#ffd9a0; font-family:Impact,sans-serif; font-size:13px; }
+  .book{ background:linear-gradient(180deg,#3a2616,#241608); border:6px solid #6a4520; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.5); padding:18px; }
+  .book h1{ text-align:center; font-family:Impact,sans-serif; font-style:italic; color:#ffd9a0; font-size:28px; margin:0 0 4px; text-shadow:2px 2px 0 #000; }
+  .book .stamp{ text-align:center; color:#caa57a; font-size:11px; margin-bottom:14px; letter-spacing:1px; }
+  .book-tabs{ display:flex; gap:5px; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
+  .btab{ background:#241608; color:#ffd9a0; border:1px solid #6a4520; font-family:Impact,sans-serif; font-size:12px; padding:7px 14px; cursor:pointer; }
+  .btab.on{ background:#ffd9a0; color:#241608; }
+  .page{ display:none; } .page.on{ display:block; }
+  .entry-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px; }
+  .entry{ background:#1a1006; border:2px solid #4a3018; border-radius:8px; padding:10px; text-align:center; min-height:110px; }
+  .entry.locked .ei{ filter:brightness(0) contrast(0); opacity:0.85; }
+  .entry.locked .en{ color:#4a3a2a; }
+  .entry .ei{ font-size:34px; }
+  .entry .en{ font-family:Impact,sans-serif; font-size:11px; color:#ffd9a0; margin-top:4px; }
+  .entry .er{ font-size:9px; margin-top:2px; }
+  .entry .ec{ font-size:9px; color:#9a8060; margin-top:3px; }
+  .book-summary{ text-align:center; color:#caa57a; font-size:12px; margin-top:14px; font-family:Impact,sans-serif; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links"><a href="index.html">Home</a><a href="arcade.html">Arcade</a><a href="fishing.html">Fishing Trip</a></div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="book-wrap">
+  <div class="book-top"><a href="arcade.html">← back to Arcade</a><span style="color:#ffd9a0; font-family:Impact,sans-serif;">📖 COLLECTION</span></div>
+
+  <div class="book">
+    <h1>THE HOOLIGAN ALMANAC</h1>
+    <div class="stamp">— every strange thing you've ever caught, won, or bought —</div>
+
+    <div class="book-tabs">
+      <button class="btab" data-p="fish" onclick="bTab('fish')">🐟 FISH</button>
+      <button class="btab" data-p="claw" onclick="bTab('claw')">🕹️ CLAW PRIZES</button>
+      <button class="btab" data-p="vending" onclick="bTab('vending')">🥤 VENDING</button>
+    </div>
+
+    <div class="page" id="page-fish">
+      <div class="entry-grid" id="fishGrid"></div>
+      <div class="book-summary" id="fishSummary"></div>
+    </div>
+    <div class="page" id="page-claw">
+      <div class="entry-grid" id="clawGrid"></div>
+      <div class="book-summary" id="clawSummary"></div>
+    </div>
+    <div class="page" id="page-vending">
+      <div class="entry-grid" id="vendingGrid"></div>
+      <div class="book-summary" id="vendingSummary"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="shop.js"></script>
+<script src="fishing-data.js"></script>
+<script src="claw-data.js"></script>
+<script src="vending-data.js"></script>
+<script src="collection.js"></script>
+</body>
+</html>

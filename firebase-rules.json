@@ -1,0 +1,63 @@
+{
+  "rules": {
+    "store": {
+
+      "userprofile": {
+        "$uid": {
+          ".read": true,
+          ".write": "auth != null && (auth.uid === $uid || auth.token.email == 'rosco3968@gmail.com')"
+        }
+      },
+
+      "live_chat": {
+        ".read": true,
+        ".write": "auth != null"
+      },
+
+      "guestbook_entries": {
+        ".read": true,
+        ".write": "auth != null"
+      },
+
+      "member_index": {
+        ".read": true,
+        ".write": "auth != null"
+      },
+
+      "coin_leaderboard": {
+        ".read": true,
+        ".write": "auth != null"
+      },
+
+      "shop_stock": {
+        ".read": true,
+        ".write": "auth != null"
+      },
+
+      "highscores": {
+        ".read": true,
+        ".write": "auth != null"
+      },
+
+      "coinflip_challenges": {
+        ".read": true,
+        ".write": "auth != null"
+      },
+
+      "site_config_v2": {
+        ".read": true,
+        ".write": "auth != null && auth.token.email == 'rosco3968@gmail.com'"
+      },
+
+      "site_ad_banners_v3": {
+        ".read": true,
+        ".write": "auth != null && auth.token.email == 'rosco3968@gmail.com'"
+      },
+
+      "$legacy": {
+        ".read": true,
+        ".write": "auth != null"
+      }
+    }
+  }
+}

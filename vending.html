@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: Vending Machine :: Hooligans Arcade ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  body{ background:#06080f; }
+  .vend-wrap{ max-width:520px; margin:12px auto; padding:0 10px 40px; }
+  .vend-top{ display:flex; justify-content:space-between; align-items:center; background:#000; border:2px solid #2a5a8a; padding:7px 12px; margin-bottom:8px; font-family:Impact,sans-serif; }
+  .vend-top a{ color:#6ab0e0; font-size:12px; }
+  .coinpill{ color:#ffd700; font-size:13px; }
+  .mute-btn{ background:#0a1828; color:#6ab0e0; border:1px solid #2a5a8a; font-family:Impact,sans-serif; font-size:11px; padding:4px 9px; cursor:pointer; }
+  #vendScene{ display:block; width:100%; border:2px solid #1a2a3a; border-radius:8px; }
+  .vend-controls{ text-align:center; margin-top:12px; }
+  .vendbtn{ background:linear-gradient(180deg,#ffd700,#b8860b); color:#000; border:3px solid #000; border-radius:8px; font-family:Impact,sans-serif; font-size:16px; padding:11px 28px; cursor:pointer; box-shadow:0 4px 0 #5a4310; }
+  .vendbtn:active{ transform:translateY(3px); box-shadow:0 1px 0 #5a4310; }
+  .vendbtn:disabled{ opacity:0.5; cursor:not-allowed; }
+  .vend-cost{ color:#6ab0e0; font-size:11px; margin-top:8px; }
+  .vendmsg{ text-align:center; font-family:Impact,sans-serif; font-size:16px; min-height:22px; margin-top:8px; color:#fff; }
+  .win{ color:#3ee08a; }  .lose{ color:#ff8888; }
+  .need-login{ background:#0a1828; border:1px solid #2a5a8a; padding:12px; color:#9ac0e0; font-size:13px; text-align:center; }
+  .dispensed{ display:none; text-align:center; margin-top:10px; }
+  .dispensed .di{ font-size:50px; } .dispensed .dn{ font-family:Impact,sans-serif; font-size:18px; color:#fff; } .dispensed .dr{ font-family:Impact,sans-serif; font-size:12px; } .dispensed .dnew{ color:#ffd700; font-size:11px; margin-top:3px; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links"><a href="index.html">Home</a><a href="arcade.html">Arcade</a><a href="fishing-collection.html">Collection 📖</a></div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="vend-wrap">
+  <div class="vend-top">
+    <a href="arcade.html">← Arcade</a>
+    <span class="coinpill" id="coinHud">—</span>
+    <button class="mute-btn" id="muteBtn">🔊 MUSIC ON</button>
+  </div>
+
+  <div id="vendLogin" class="need-login" style="display:none;">Log in to use the vending machine (15 GBD per pull).</div>
+
+  <div id="vendGame" style="display:none;">
+    <canvas id="vendScene" width="500" height="460"></canvas>
+    <div class="vend-controls">
+      <button class="vendbtn" id="buyBtn">INSERT 15 GBD</button>
+      <div class="vend-cost">a sketchy machine under a flickering street lamp. you don't know what you'll get.</div>
+      <div class="vendmsg" id="vendMsg">pick your poison... or just hit the button</div>
+      <div class="dispensed" id="dispensed">
+        <div class="di" id="dispIcon">🧦</div>
+        <div class="dn" id="dispName">Single Wet Sock</div>
+        <div class="dr" id="dispRarity">Common</div>
+        <div class="dnew" id="dispNew"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="shop.js"></script>
+<script src="fishing-data.js"></script>
+<script src="vending-data.js"></script>
+<script src="fishing-music.js"></script>
+<script src="fishing-sfx.js"></script>
+<script src="vending.js"></script>
+</body>
+</html>

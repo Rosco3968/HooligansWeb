@@ -86,6 +86,7 @@ function profileCardHTML(p, opts){
       ${p.statusText?`<div class="pcard-status">“${escapeHtml(p.statusText)}”</div>`:''}
       <div class="pcard-bio">${p.bio?escapeHtml(p.bio):'<span style="color:var(--steel-dim);font-style:italic;">no bio yet...</span>'}</div>
       ${metaHTML}
+      ${typeof petBadgeHTML==='function' ? petBadgeHTML(p) : ''}
       ${trophyShelfHTML(p)}
       ${extra}
       ${buttons}
