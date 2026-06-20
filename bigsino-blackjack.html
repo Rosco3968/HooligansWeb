@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: BIGSINO :: High-Roller Blackjack ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  body{ background:#050505; }
+  .bigsino-mast{ text-align:center; padding:16px 10px 10px; border-bottom:3px solid #ffd700; background:linear-gradient(180deg,#0a0a0a,#000); }
+  .bigsino-logo{ font-family:Impact,sans-serif; font-size:clamp(30px,7vw,56px); letter-spacing:4px; color:#ffd700; text-shadow:0 0 16px #ffd700,0 0 34px #ff7a00; }
+  .bigsino-nav{ display:flex; justify-content:center; background:#000; border-bottom:2px solid #ffd700; flex-wrap:wrap; }
+  .bigsino-nav a{ color:#ffd700; font-family:Impact,sans-serif; font-size:13px; padding:9px 16px; text-decoration:none; border-right:1px solid #3a2c1c; }
+  .bigsino-nav a:hover, .bigsino-nav a.on{ background:#ffd700; color:#000; }
+  .wrap{ max-width:840px; margin:14px auto; padding:0 12px 50px; }
+  .coin-hud-bar{ background:#000; border:2px solid #ffd700; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-family:Impact,sans-serif; }
+  #coinHud{ font-size:18px; color:#ffd700; }
+  .denied{ text-align:center; padding:50px 16px; } .denied h2{ font-family:Impact,sans-serif; color:#ff4444; font-size:30px; }
+  .denied a{ color:#caa53c; }
+
+  /* felt table */
+  .felt{ position:relative; background:
+      radial-gradient(ellipse at 50% 38%, #1f7a4d 0%, #0d5132 55%, #073723 100%);
+    border:14px solid #5a3a1a; border-radius:120px/70px;
+    box-shadow:inset 0 0 60px rgba(0,0,0,0.6), 0 10px 30px rgba(0,0,0,0.7), 0 0 0 3px #ffd700;
+    padding:24px 18px 30px; min-height:360px; }
+  .felt-arc{ position:absolute; top:120px; left:50%; transform:translateX(-50%); width:80%; height:160px; border:2px dashed rgba(255,215,0,0.3); border-radius:50%; pointer-events:none; }
+  .felt-label{ text-align:center; color:rgba(255,215,0,0.55); font-family:Georgia,serif; font-style:italic; font-size:13px; letter-spacing:1px; margin-bottom:10px; }
+  .hand-zone{ text-align:center; margin:8px 0; min-height:96px; }
+  .hand-zone .who{ color:#ffe9a8; font-family:Impact,sans-serif; font-size:13px; letter-spacing:1px; }
+  .hand-zone .total{ color:#fff; font-size:12px; margin-left:6px; }
+  .cards{ display:flex; gap:8px; justify-content:center; margin-top:6px; min-height:84px; perspective:600px; }
+  .pcard{ width:58px; height:82px; border-radius:6px; background:#fff; color:#111; font-family:Georgia,serif; font-weight:bold; position:relative; box-shadow:2px 3px 8px rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; font-size:20px;
+    animation:dealIn 0.4s ease-out backwards; }
+  @keyframes dealIn{ 0%{ transform:translateY(-120px) rotateY(90deg); opacity:0; } 100%{ transform:none; opacity:1; } }
+  .pcard.red{ color:#c4161c; }
+  .pcard .tl{ position:absolute; top:4px; left:5px; font-size:13px; }
+  .pcard .br{ position:absolute; bottom:4px; right:5px; font-size:13px; transform:rotate(180deg); }
+  .pcard.back{ background:repeating-linear-gradient(45deg,#caa53c,#caa53c 6px,#7a5a12 6px,#7a5a12 12px); color:transparent; border:2px solid #ffd700; }
+  .chips{ text-align:center; margin:14px 0 6px; }
+  .controls{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
+  .controls input{ width:110px; background:#000; color:#ffd700; border:2px solid #ffd700; padding:8px; font-family:Impact,sans-serif; text-align:center; font-size:16px; }
+  .gbtn{ background:#ffd700; color:#000; border:2px solid #000; font-family:Impact,sans-serif; font-size:14px; padding:9px 18px; cursor:pointer; }
+  .gbtn:hover{ background:#fff0a0; } .gbtn:disabled{ background:#555; color:#999; cursor:not-allowed; }
+  .gbtn.red{ background:#c4161c; color:#fff; } .gbtn.red:hover{ background:#a01015; }
+  .bjmsg{ text-align:center; min-height:24px; font-family:Impact,sans-serif; font-size:18px; margin-top:10px; }
+  .win{ color:#3ee08a; } .lose{ color:#ff5555; } .push{ color:#ffd700; }
+  .minbet{ text-align:center; color:#caa53c; font-size:11px; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links"><a href="index.html">Home</a><a href="casino.html">Casino</a><a href="bigsino.html">BIGSINO Lobby</a></div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="bigsino-mast"><div class="bigsino-logo">BIGSINO</div></div>
+<div class="bigsino-nav">
+  <a href="bigsino.html">LOBBY</a>
+  <a href="bigsino-blackjack.html" class="on">HIGH-ROLLER BJ</a>
+  <a href="bigsino-slots.html">SLOTS</a>
+  <a href="bigsino-horses.html">HORSES</a>
+  <a href="bigsino-coinflip.html">COIN FLIP</a>
+  <a href="bigsino-store.html">VIP STORE</a>
+</div>
+
+<div id="denied" class="denied" style="display:none;">
+  <h2>ACCESS DENIED</h2>
+  <p style="color:#caa53c;">Members only. Find the golden door in the Casino.</p>
+  <p><a href="casino.html">← back to the Casino</a></p>
+</div>
+
+<div id="content" style="display:none;">
+  <div class="wrap">
+    <div class="coin-hud-bar"><span style="color:#caa53c;">VIP WALLET</span><span id="coinHud">—</span></div>
+
+    <div class="felt">
+      <div class="felt-label">★ BIGSINO HIGH-ROLLER BLACKJACK ★ DEALER STANDS ON 17 ★ BLACKJACK PAYS 3:2 ★</div>
+      <div class="felt-arc"></div>
+      <div class="hand-zone">
+        <div class="who">DEALER <span class="total" id="dealerTotal"></span></div>
+        <div class="cards" id="dealerCards"></div>
+      </div>
+      <div class="hand-zone">
+        <div class="who">YOU <span class="total" id="playerTotal"></span></div>
+        <div class="cards" id="playerCards"></div>
+      </div>
+      <div class="bjmsg" id="bjMsg">place your bet — high rollers only</div>
+    </div>
+
+    <div class="controls">
+      <input type="number" id="bjBet" value="100" min="50" step="50">
+      <button class="gbtn" id="bjDeal">DEAL</button>
+      <button class="gbtn" id="bjHit" disabled>HIT</button>
+      <button class="gbtn red" id="bjStand" disabled>STAND</button>
+      <button class="gbtn" id="bjDouble" disabled>DOUBLE</button>
+    </div>
+    <div class="minbet">minimum bet: 50 GBD · this is the big leagues</div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="shop.js"></script>
+<script src="bigsino-sound.js"></script>
+<script src="bigsino-bj.js"></script>
+</body>
+</html>

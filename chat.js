@@ -17,8 +17,6 @@ document.addEventListener('portal-ready', () => {
   wireChat();
   subscribeChat();
   buildEmojiPicker();
-  // secret backchannel: if arriving via the ad's hidden door
-  if(location.hash === '#backchannel'){ /* reserved hook */ }
 });
 
 document.addEventListener('hooligan-auth', () => {

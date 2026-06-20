@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: BIGSINO :: VIP Store ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  body{ background:#050505; }
+  .bigsino-mast{ text-align:center; padding:16px 10px 10px; border-bottom:3px solid #ffd700; background:linear-gradient(180deg,#0a0a0a,#000); }
+  .bigsino-logo{ font-family:Impact,sans-serif; font-size:clamp(30px,7vw,56px); letter-spacing:4px; color:#ffd700; text-shadow:0 0 16px #ffd700,0 0 34px #ff7a00; }
+  .bigsino-nav{ display:flex; justify-content:center; background:#000; border-bottom:2px solid #ffd700; flex-wrap:wrap; }
+  .bigsino-nav a{ color:#ffd700; font-family:Impact,sans-serif; font-size:13px; padding:9px 16px; text-decoration:none; border-right:1px solid #3a2c1c; }
+  .bigsino-nav a:hover, .bigsino-nav a.on{ background:#ffd700; color:#000; }
+  .wrap{ max-width:860px; margin:14px auto; padding:0 12px 50px; }
+  .coin-hud-bar{ background:#000; border:2px solid #ffd700; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-family:Impact,sans-serif; }
+  #coinHud{ font-size:18px; color:#ffd700; }
+  .denied{ text-align:center; padding:50px 16px; } .denied h2{ font-family:Impact,sans-serif; color:#ff4444; font-size:30px; } .denied a{ color:#caa53c; }
+  .premium-box{ background:linear-gradient(180deg,#0e0e0e,#060606); border:2px solid #ffd700; box-shadow:0 0 24px rgba(255,215,0,0.2); padding:16px; margin-bottom:16px; }
+  .premium-box h2{ font-family:Impact,sans-serif; color:#ffd700; letter-spacing:1px; margin:0 0 10px; text-align:center; }
+  .msg{ text-align:center; min-height:20px; font-family:Impact,sans-serif; }
+  .win{ color:#3ee08a; } .lose{ color:#ff5555; }
+  /* shop styles (mirror casino) */
+  .shop-cat{ font-family:Impact,sans-serif; color:#ffd700; font-size:14px; margin:14px 0 6px; border-bottom:1px solid #3a2c1c; }
+  .shop-row{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
+  .shop-item{ background:#0a0a0a; border:1px solid #3a2c1c; padding:10px; text-align:center; }
+  .si-name{ font-family:Impact,sans-serif; font-size:13px; color:#fff; }
+  .si-desc{ font-size:9px; color:#caa53c; margin:3px 0 7px; min-height:24px; }
+  .shop-btn{ background:#ffd700; color:#000; border:1px solid #000; font-family:Impact,sans-serif; font-size:11px; padding:6px 10px; cursor:pointer; width:100%; }
+  .shop-btn:hover{ background:#fff0a0; } .shop-btn.equipped{ background:#3ee08a; }
+  .owned-tag{ color:#3ee08a; font-family:Impact,sans-serif; font-size:11px; } .soldout{ color:#ff4444; font-family:Impact,sans-serif; font-size:11px; }
+  .limited{ color:#ff7a00; font-size:9px; }
+  .need-login{ color:#caa53c; }
+  .ach-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
+  .ach{ background:#0a0a0a; border:1px solid #3a2c1c; padding:10px; text-align:center; opacity:0.4; }
+  .ach.got{ opacity:1; border-color:#ffd700; box-shadow:0 0 10px rgba(255,215,0,0.3); }
+  .ach .ai{ font-size:30px; } .ach .an{ font-family:Impact,sans-serif; color:#ffd700; font-size:12px; margin-top:4px; } .ach .ad{ font-size:9px; color:#caa53c; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links"><a href="index.html">Home</a><a href="casino.html">Casino</a><a href="bigsino.html">BIGSINO Lobby</a></div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="bigsino-mast"><div class="bigsino-logo">BIGSINO</div></div>
+<div class="bigsino-nav">
+  <a href="bigsino.html">LOBBY</a>
+  <a href="bigsino-blackjack.html">HIGH-ROLLER BJ</a>
+  <a href="bigsino-slots.html">SLOTS</a>
+  <a href="bigsino-horses.html">HORSES</a>
+  <a href="bigsino-coinflip.html">COIN FLIP</a>
+  <a href="bigsino-store.html" class="on">VIP STORE</a>
+</div>
+
+<div id="denied" class="denied" style="display:none;">
+  <h2>ACCESS DENIED</h2><p style="color:#caa53c;">Members only.</p><p><a href="casino.html">← back to the Casino</a></p>
+</div>
+
+<div id="content" style="display:none;">
+  <div class="wrap">
+    <div class="coin-hud-bar"><span style="color:#caa53c;">VIP WALLET</span><span id="coinHud">—</span></div>
+
+    <div class="premium-box">
+      <h2>🏅 YOUR ACHIEVEMENTS</h2>
+      <div class="ach-grid" id="achGrid"></div>
+    </div>
+
+    <div class="premium-box">
+      <h2>💎 THE VIP STORE 💎</h2>
+      <div class="msg" id="shopMsg"></div>
+      <div style="text-align:center; color:#caa53c; font-size:11px; margin-bottom:6px;">ultra-rare, ultra-expensive. only the BIGSINO crowd can buy here.</div>
+      <div id="vipShopGrid"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="shop.js"></script>
+<script>
+  function gateCheck(){
+    const d=document.getElementById('denied'), c=document.getElementById('content');
+    if(currentUser && currentProfile && currentProfile.bigsinoAccess){
+      d.style.display='none'; c.style.display='block';
+      renderShop({ vip:true, gridId:'vipShopGrid' });
+      renderAchievements();
+      if(typeof checkAchievements==='function') checkAchievements().then(()=>renderAchievements());
+    } else { d.style.display='block'; c.style.display='none'; }
+  }
+  function renderAchievements(){
+    const grid=document.getElementById('achGrid'); if(!grid||typeof ACHIEVEMENTS==='undefined') return;
+    const have=(currentProfile&&currentProfile.achievements)||[];
+    grid.innerHTML = ACHIEVEMENTS.map(a=>`<div class="ach ${have.includes(a.id)?'got':''}"><div class="ai">${a.icon}</div><div class="an">${a.name}</div><div class="ad">${a.desc}</div></div>`).join('');
+  }
+  document.addEventListener('hooligan-auth', gateCheck);
+  document.addEventListener('portal-ready', gateCheck);
+</script>
+</body>
+</html>

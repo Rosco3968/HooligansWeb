@@ -8,15 +8,27 @@ let editingProfile = null;
 
 // show owned trophies on a profile card
 function trophyShelfHTML(p){
-  if(typeof SHOP_ITEMS === 'undefined') return '';
+  if(typeof allShopItems === 'undefined') return achievementRow(p);
   const inv = p.inventory || [];
-  const trophies = inv.map(id => SHOP_ITEMS.find(i=>i.id===id)).filter(i=>i && i.type==='trophy');
-  if(!trophies.length) return '';
-  return `<div class="pcard-trophies" style="margin-top:6px; font-size:18px;">${trophies.map(t=>{
-    let lbl = t.icon;
-    if(t.id==='l_founder' && p.founderNum) lbl = `🏆#${p.founderNum}`;
-    return `<span title="${escapeHtml(t.name)}">${lbl}</span>`;
-  }).join(' ')}</div>`;
+  const trophies = inv.map(id => allShopItems().find(i=>i.id===id)).filter(i=>i && i.type==='trophy');
+  let html='';
+  if(trophies.length){
+    html += `<div class="pcard-trophies" style="margin-top:6px; font-size:18px;">${trophies.map(t=>{
+      let lbl = t.icon;
+      if(t.id==='l_founder' && p.founderNum) lbl = `🏆#${p.founderNum}`;
+      return `<span title="${escapeHtml(t.name)}">${lbl}</span>`;
+    }).join(' ')}</div>`;
+  }
+  html += achievementRow(p);
+  return html;
+}
+function achievementRow(p){
+  if(typeof ACHIEVEMENTS==='undefined') return '';
+  const have = p.achievements || [];
+  if(!have.length) return '';
+  const got = ACHIEVEMENTS.filter(a=>have.includes(a.id));
+  if(!got.length) return '';
+  return `<div style="margin-top:5px;">${got.map(a=>`<span class="ach-badge" title="${escapeHtml(a.desc)}">${a.icon} ${escapeHtml(a.name)}</span>`).join('')}</div>`;
 }
 
 document.addEventListener('hooligan-auth', (e) => {
@@ -50,6 +62,7 @@ function profileCardHTML(p, opts){
   const bg = p.cardBg || '#141414';
   const nameColor = p.nameColor || '#ffb000';
   const titleBadge = (typeof titleBadgeHTML==='function') ? titleBadgeHTML(p) : '';
+  const vipBadge = p.vip ? '<span class="name-badge" style="background:linear-gradient(90deg,#ffd700,#ff7a00);color:#000;">★VIP★</span>' : '';
   const flairCls = (typeof flairClass==='function') ? flairClass(p) : '';
   const pic = p.pic || 'https://placehold.co/230x170/000/c4161c?text=NO+PIC';
   const extra = (p.extraPics && p.extraPics.length)
@@ -67,7 +80,7 @@ function profileCardHTML(p, opts){
   }
 
   return `<div class="pcard" style="box-shadow:0 0 0 1px ${accent}; background:${bg};">
-    <div class="pcard-h" style="background:linear-gradient(180deg,${accent},#000); color:${nameColor};"><span class="${flairCls}">${escapeHtml(p.handle)}</span>${titleBadge}${opts.mine?' <span style="font-size:10px;color:#fff;">(you)</span>':''}</div>
+    <div class="pcard-h" style="background:linear-gradient(180deg,${accent},#000); color:${nameColor};"><span class="${flairCls}">${escapeHtml(p.handle)}</span>${vipBadge}${titleBadge}${opts.mine?' <span style="font-size:10px;color:#fff;">(you)</span>':''}</div>
     <img class="pcard-pic" src="${escapeHtml(pic)}" alt="${escapeHtml(p.handle)}" onerror="this.src='https://placehold.co/230x170/000/c4161c?text=BROKEN+LINK'">
     <div class="pcard-b">
       ${p.statusText?`<div class="pcard-status">“${escapeHtml(p.statusText)}”</div>`:''}

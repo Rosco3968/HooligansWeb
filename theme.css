@@ -276,3 +276,16 @@ a:hover{ color: var(--amber); text-decoration: underline; }
 .flair-rgb{ animation:rgbname 2s linear infinite; }
 .flair-diamond{ color:#b9f2ff !important; text-shadow:0 0 6px #fff, 0 0 10px #19d3ff; }
 .flair-fire{ text-shadow:0 0 4px #ff7a00, 0 0 8px #c4161c; }
+
+/* ===== VIP shop badges + name colors ===== */
+.badge-whale{ background:linear-gradient(90deg,#19d3ff,#0a4a66); color:#fff; }
+.badge-kingpin{ background:linear-gradient(90deg,#ffd700,#b8860b); color:#000; }
+.badge-shark{ background:#0a4a66; color:#19d3ff; }
+.badge-made{ background:#000; color:#ffd700; border:1px solid #ffd700; }
+.flair-neon{ color:#ff2079 !important; text-shadow:0 0 6px #ff2079,0 0 12px #ff2079; }
+.flair-emerald{ color:#3ee08a !important; text-shadow:0 0 6px #1b9e8f; }
+@keyframes oilshift{ 0%{color:#19d3ff;}25%{color:#9b30ff;}50%{color:#3ee08a;}75%{color:#ffd700;}100%{color:#19d3ff;} }
+.flair-oil{ animation:oilshift 3s linear infinite; }
+.flair-void{ color:#6a6a8a !important; text-shadow:0 0 8px #000,0 0 3px #9b30ff; }
+/* achievement badges */
+.ach-badge{ display:inline-flex; align-items:center; gap:4px; background:#0a0a0a; border:1px solid #ffd700; color:#ffd700; font-family:Impact,sans-serif; font-size:10px; padding:2px 6px; border-radius:3px; margin:2px; }

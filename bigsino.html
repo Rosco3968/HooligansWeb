@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: BIGSINO :: members only ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  body{ background:#050505; }
+  .bigsino-mast{ text-align:center; padding:22px 10px 14px; border-bottom:3px solid #ffd700; background:linear-gradient(180deg,#0a0a0a,#000); }
+  .bigsino-logo{ font-family:Impact,sans-serif; font-size:clamp(40px,9vw,76px); letter-spacing:4px; color:#ffd700; text-shadow:0 0 16px #ffd700,0 0 34px #ff7a00; }
+  .bigsino-sub{ color:#caa53c; font-size:12px; letter-spacing:2px; }
+  .bigsino-nav{ display:flex; justify-content:center; gap:0; background:#000; border-bottom:2px solid #ffd700; flex-wrap:wrap; }
+  .bigsino-nav a{ color:#ffd700; font-family:Impact,sans-serif; font-size:13px; padding:9px 16px; text-decoration:none; border-right:1px solid #3a2c1c; }
+  .bigsino-nav a:hover{ background:#ffd700; color:#000; }
+  .bigsino-wrap{ max-width:1000px; margin:16px auto; padding:0 12px 50px; }
+  .premium-box{ background:linear-gradient(180deg,#0e0e0e,#060606); border:2px solid #ffd700; box-shadow:0 0 24px rgba(255,215,0,0.25); padding:18px; margin-bottom:16px; }
+  .premium-box h2{ font-family:Impact,sans-serif; color:#ffd700; letter-spacing:1px; margin:0 0 8px; }
+  .coin-hud-bar{ background:#000; border:2px solid #ffd700; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-family:Impact,sans-serif; }
+  #coinHud{ font-size:18px; color:#ffd700; }
+  .vip-note{ color:#caa53c; font-size:12px; }
+  .denied{ text-align:center; padding:50px 16px; }
+  .denied h2{ font-family:Impact,sans-serif; color:#ff4444; font-size:30px; }
+  .coming{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:10px; }
+  .coming .c{ background:#0a0a0a; border:1px solid #3a2c1c; padding:16px; text-align:center; }
+  .coming .c .ic{ font-size:34px; } .coming .c .t{ font-family:Impact,sans-serif; color:#ffd700; margin-top:6px; } .coming .c .s{ font-size:10px; color:#888; }
+  .backlink{ text-align:center; margin-top:20px; } .backlink a{ color:#caa53c; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links">
+    <a href="index.html">Home</a><a href="casino.html">Casino</a><a href="crew.html">Crew</a>
+  </div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="bigsino-mast">
+  <div class="bigsino-logo">BIGSINO</div>
+  <div class="bigsino-sub">★ MEMBERS ONLY ★ HIGH ROLLERS ★ NO LIMITS ★</div>
+</div>
+
+<div id="bigsinoDenied" class="denied" style="display:none;">
+  <h2>ACCESS DENIED</h2>
+  <p class="vip-note">This room is members only. Find the golden door in the Casino and enter the code.</p>
+  <div class="backlink"><a href="casino.html">← back to the Casino</a></div>
+</div>
+
+<div id="bigsinoContent" style="display:none;">
+  <div class="bigsino-nav">
+    <a href="bigsino.html">LOBBY</a>
+    <a href="bigsino-blackjack.html">HIGH-ROLLER BJ</a>
+    <a href="bigsino-slots.html">SLOTS</a>
+    <a href="bigsino-horses.html">HORSES</a>
+    <a href="bigsino-coinflip.html">COIN FLIP</a>
+    <a href="bigsino-store.html">VIP STORE</a>
+  </div>
+  <div class="bigsino-wrap">
+    <div class="coin-hud-bar"><span style="color:#caa53c;">VIP WALLET</span><span id="coinHud">—</span></div>
+
+    <div class="premium-box">
+      <h2>★ WELCOME TO BIGSINO ★</h2>
+      <p class="vip-note">You found the door and cracked the code — you're VIP now (check your profile for the badge). This is the high-roller floor. The tables are being polished as we speak.</p>
+    </div>
+
+    <div class="premium-box">
+      <h2>OPENING SOON ON THIS FLOOR</h2>
+      <div class="coming">
+        <a href="bigsino-blackjack.html" class="c" style="text-decoration:none;"><div class="ic">🃏</div><div class="t">HIGH-ROLLER BLACKJACK</div><div class="s" style="color:#3ee08a;">OPEN NOW ▸ play</div></a>
+        <a href="bigsino-slots.html" class="c" style="text-decoration:none;"><div class="ic">🎰</div><div class="t">VEGAS SLOTS</div><div class="s" style="color:#3ee08a;">OPEN NOW ▸ play</div></a>
+        <a href="bigsino-horses.html" class="c" style="text-decoration:none;"><div class="ic">🐎</div><div class="t">HORSE RACING</div><div class="s" style="color:#3ee08a;">OPEN NOW ▸ play</div></a>
+        <a href="bigsino-coinflip.html" class="c" style="text-decoration:none;"><div class="ic">🪙</div><div class="t">COIN FLIP ARENA</div><div class="s" style="color:#3ee08a;">OPEN NOW ▸ play</div></a>
+        <a href="bigsino-store.html" class="c" style="text-decoration:none;"><div class="ic">🛒</div><div class="t">VIP STORE</div><div class="s" style="color:#3ee08a;">OPEN NOW ▸ shop</div></a>
+      </div>
+    </div>
+
+    <div class="backlink"><a href="casino.html">← back to the main Casino</a></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="shop.js"></script>
+<script>
+  // gate: only members (bigsinoAccess) get in
+  function checkBigsinoAccess(){
+    const denied = document.getElementById('bigsinoDenied');
+    const content = document.getElementById('bigsinoContent');
+    if(currentUser && currentProfile && currentProfile.bigsinoAccess){
+      denied.style.display='none'; content.style.display='block';
+    }else{
+      denied.style.display='block'; content.style.display='none';
+    }
+  }
+  document.addEventListener('hooligan-auth', checkBigsinoAccess);
+  document.addEventListener('portal-ready', checkBigsinoAccess);
+</script>
+</body>
+</html>

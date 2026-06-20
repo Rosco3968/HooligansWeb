@@ -93,3 +93,40 @@ everyone at once — your giveaway feature.
 
 NEW FILES in this version: casino.html, casino.js, wallet.js, junk.js, shop.js
 (plus all pages updated with the CASINO nav link + wallet).
+
+====================================================
+## BIGSINO — the secret high-roller room (new)
+====================================================
+
+A hidden second casino. Here's how it works:
+
+THE DOOR: on the main CASINO page, a glowing golden 🚪 door sits bottom-left.
+Click it — it swings open and a flashing black/gold BIGSINO keypad appears.
+The code is 1776 (Independence Day — Chief drops the hint if you ask him,
+without ever saying the number). Enter it and you're in.
+
+FIRST ENTRY = VIP: cracking the code permanently grants a ★VIP★ badge on your
+profile and unlocks the BIGSINO room for your account. Non-members who somehow
+reach the pages get "ACCESS DENIED."
+
+INSIDE BIGSINO (premium gold styling, no clutter):
+- HIGH-ROLLER BLACKJACK — felt table, animated card deals, win sounds, double-down, min bet 50, blackjack pays 3:2
+- VEGAS SLOTS — flashing-light cabinet, RIGGED (about a 5% win rate, ~50% RTP) so wins are rare but a 💎💎💎 jackpot pays 100×
+- HORSE RACING — pick a pixel horse, bet, watch the race, payout = bet × odds (longshots pay more)
+- COIN FLIP ARENA — multiplayer: post a challenge with a bet+side, another member accepts the other side, winner takes the pot. (Coins are escrowed; it's zero-sum.)
+- VIP STORE — ultra-expensive, mostly limited badges/titles/name-colors/trophies (WHALE, KINGPIN, MADE MAN, Void Name 1-of-1, BIGSINO Throne 1-of-1, etc.)
+
+ACHIEVEMENTS: auto-unlock and show on your profile + the VIP store:
+- BIG HITTER (win 500+ in one bet), HIGH ROLLER (win 5000+), DINO KING (#1 Dino score),
+  LOADED (hold 10k+ coins), INSIDER (found the door), COLLECTOR (own 8+ shop items).
+
+ALL the coins are still fake GBD coins — no real money anywhere.
+
+NEW FILES this version: bigsino.html, bigsino-blackjack.html, bigsino-slots.html,
+bigsino-horses.html, bigsino-coinflip.html, bigsino-store.html, bigsino-door.js,
+bigsino-bj.js, bigsino-slots.js, bigsino-horses.js, bigsino-coinflip.js,
+bigsino-sound.js (plus casino.html/shop.js/wallet.js/crew.js/chat.js updated).
+
+NOTE on the multiplayer coin flip: the money math is solid (zero-sum, no
+duplication), but true real-time edge cases (two people accepting the same
+challenge in the same instant) are best confirmed with live testing.

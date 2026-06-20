@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: BIGSINO :: Horse Racing ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  body{ background:#050505; }
+  .bigsino-mast{ text-align:center; padding:16px 10px 10px; border-bottom:3px solid #ffd700; background:linear-gradient(180deg,#0a0a0a,#000); }
+  .bigsino-logo{ font-family:Impact,sans-serif; font-size:clamp(30px,7vw,56px); letter-spacing:4px; color:#ffd700; text-shadow:0 0 16px #ffd700,0 0 34px #ff7a00; }
+  .bigsino-nav{ display:flex; justify-content:center; background:#000; border-bottom:2px solid #ffd700; flex-wrap:wrap; }
+  .bigsino-nav a{ color:#ffd700; font-family:Impact,sans-serif; font-size:13px; padding:9px 16px; text-decoration:none; border-right:1px solid #3a2c1c; }
+  .bigsino-nav a:hover, .bigsino-nav a.on{ background:#ffd700; color:#000; }
+  .wrap{ max-width:760px; margin:14px auto; padding:0 12px 50px; }
+  .coin-hud-bar{ background:#000; border:2px solid #ffd700; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-family:Impact,sans-serif; }
+  #coinHud{ font-size:18px; color:#ffd700; }
+  .denied{ text-align:center; padding:50px 16px; } .denied h2{ font-family:Impact,sans-serif; color:#ff4444; font-size:30px; } .denied a{ color:#caa53c; }
+
+  #raceCanvas{ display:block; width:100%; border:3px solid #ffd700; border-radius:8px; box-shadow:0 0 24px rgba(255,215,0,0.3); background:#3a7d3a; }
+  .bet-panel{ background:linear-gradient(180deg,#0e0e0e,#060606); border:2px solid #ffd700; padding:14px; margin-top:14px; }
+  .bet-panel h3{ font-family:Impact,sans-serif; color:#ffd700; margin:0 0 10px; text-align:center; letter-spacing:1px; }
+  .horse-picks{ display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:8px; }
+  .pick{ background:#0a0a0a; border:2px solid #333; padding:9px; cursor:pointer; text-align:center; transition:border-color 0.15s; }
+  .pick:hover{ border-color:#caa53c; }
+  .pick.sel{ border-color:#ffd700; box-shadow:0 0 12px rgba(255,215,0,0.4); }
+  .pick .nm{ font-family:Impact,sans-serif; color:#fff; font-size:13px; }
+  .pick .od{ color:#3ee08a; font-size:11px; }
+  .pick .sw{ display:inline-block; width:12px; height:12px; border-radius:50%; vertical-align:middle; margin-right:4px; }
+  .race-controls{ display:flex; gap:8px; justify-content:center; align-items:center; margin-top:12px; flex-wrap:wrap; }
+  .race-controls input{ width:120px; background:#000; color:#ffd700; border:2px solid #ffd700; padding:9px; font-family:Impact,sans-serif; text-align:center; font-size:16px; }
+  .gbtn{ background:#ffd700; color:#000; border:2px solid #000; font-family:Impact,sans-serif; font-size:15px; padding:10px 24px; cursor:pointer; }
+  .gbtn:hover{ background:#fff0a0; } .gbtn:disabled{ background:#555; color:#999; cursor:not-allowed; }
+  .racemsg{ text-align:center; min-height:24px; font-family:Impact,sans-serif; font-size:18px; margin-top:12px; }
+  .win{ color:#3ee08a; } .lose{ color:#ff5555; }
+  .odds-note{ text-align:center; color:#caa53c; font-size:11px; margin-top:6px; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links"><a href="index.html">Home</a><a href="casino.html">Casino</a><a href="bigsino.html">BIGSINO Lobby</a></div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="bigsino-mast"><div class="bigsino-logo">BIGSINO</div></div>
+<div class="bigsino-nav">
+  <a href="bigsino.html">LOBBY</a>
+  <a href="bigsino-blackjack.html">HIGH-ROLLER BJ</a>
+  <a href="bigsino-slots.html">SLOTS</a>
+  <a href="bigsino-horses.html" class="on">HORSES</a>
+  <a href="bigsino-coinflip.html">COIN FLIP</a>
+  <a href="bigsino-store.html">VIP STORE</a>
+</div>
+
+<div id="denied" class="denied" style="display:none;">
+  <h2>ACCESS DENIED</h2><p style="color:#caa53c;">Members only.</p><p><a href="casino.html">← back to the Casino</a></p>
+</div>
+
+<div id="content" style="display:none;">
+  <div class="wrap">
+    <div class="coin-hud-bar"><span style="color:#caa53c;">VIP WALLET</span><span id="coinHud">—</span></div>
+
+    <canvas id="raceCanvas" width="720" height="300"></canvas>
+
+    <div class="bet-panel">
+      <h3>🐎 PICK YOUR HORSE 🐎</h3>
+      <div class="horse-picks" id="horsePicks"></div>
+      <div class="race-controls">
+        <input type="number" id="raceBet" value="50" min="25" step="25">
+        <button class="gbtn" id="raceStart" disabled>RACE!</button>
+      </div>
+      <div class="odds-note">payout = your bet × the horse's odds if it WINS. longshots pay more.</div>
+      <div class="racemsg" id="raceMsg">pick a horse to start</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="shop.js"></script>
+<script src="bigsino-sound.js"></script>
+<script src="bigsino-horses.js"></script>
+</body>
+</html>

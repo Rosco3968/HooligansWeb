@@ -25,12 +25,63 @@ const SHOP_ITEMS = [
   { id:'l_diamond', type:'flair', name:'💎 Diamond Aura', cost:5000, flair:'diamond', desc:'only 1 ever. the ultimate flex.', limited:1 }
 ];
 
-function getItem(id){ return SHOP_ITEMS.find(i=>i.id===id); }
+// ===== VIP-ONLY items (sold in the BIGSINO VIP store) =====
+const VIP_ITEMS = [
+  // titles
+  { id:'v_whale', type:'title', name:'🐋 WHALE', cost:8000, cls:'badge-whale', desc:'you bet more than you should', vip:true },
+  { id:'v_kingpin', type:'title', name:'👑 KINGPIN', cost:12000, cls:'badge-kingpin', desc:'runs the back room', vip:true, limited:3 },
+  { id:'v_shark', type:'title', name:'🦈 CARD SHARK', cost:6000, cls:'badge-shark', desc:'sharp at the tables', vip:true },
+  { id:'v_made', type:'title', name:'★ MADE MAN ★', cost:15000, cls:'badge-made', desc:'only 2 ever made', vip:true, limited:2 },
+  // name colors (flair)
+  { id:'v_neon', type:'flair', name:'Neon Pink Name', cost:7000, flair:'neon', desc:'blinding pink glow', vip:true },
+  { id:'v_emerald', type:'flair', name:'Emerald Name', cost:7000, flair:'emerald', desc:'rich green shimmer', vip:true },
+  { id:'v_oil', type:'flair', name:'Oil Slick Name', cost:9000, flair:'oil', desc:'shifting iridescent', vip:true },
+  { id:'v_void', type:'flair', name:'Void Name', cost:20000, flair:'void', desc:'1 of 1. swallows light.', vip:true, limited:1 },
+  // trophies
+  { id:'v_bars', type:'trophy', name:'🥇 Gold Bars', cost:5000, icon:'🥇', desc:'stacked', vip:true },
+  { id:'v_dice', type:'trophy', name:'🎲 Loaded Dice', cost:6500, icon:'🎲', desc:'always roll your way', vip:true },
+  { id:'v_ace', type:'trophy', name:'🂡 The Ace', cost:8000, icon:'🂡', desc:'up your sleeve', vip:true },
+  { id:'v_throne', type:'trophy', name:'🪑 BIGSINO Throne', cost:25000, icon:'🪑', desc:'1 of 1. you rule BIGSINO.', vip:true, limited:1 }
+];
+
+// ===== ACHIEVEMENTS (auto-unlock, shown as badges) =====
+const ACHIEVEMENTS = [
+  { id:'a_firstbig', icon:'💰', name:'BIG HITTER', desc:'win 500+ in one bet', test:p=> (p.biggestWin||0) >= 500 },
+  { id:'a_whale', icon:'🐋', name:'HIGH ROLLER', desc:'win 5000+ in one bet', test:p=> (p.biggestWin||0) >= 5000 },
+  { id:'a_dino', icon:'🦖', name:'DINO KING', desc:'#1 on the Dino leaderboard', test:(p,ctx)=> ctx && ctx.dinoTop===p.uid },
+  { id:'a_rich', icon:'🤑', name:'LOADED', desc:'hold 10,000+ coins', test:p=> (p.coins||0) >= 10000 },
+  { id:'a_vip', icon:'🚪', name:'INSIDER', desc:'found the BIGSINO door', test:p=> !!p.vip },
+  { id:'a_collector', icon:'🎖️', name:'COLLECTOR', desc:'own 8+ shop items', test:p=> (p.inventory||[]).length >= 8 }
+];
+
+// merged catalog accessor
+function allShopItems(){ return SHOP_ITEMS.concat(typeof VIP_ITEMS!=='undefined'?VIP_ITEMS:[]); }
+
+function getItem(id){ return allShopItems().find(i=>i.id===id); }
+
+// check & persist newly-earned achievements; returns array of newly unlocked
+async function checkAchievements(ctx){
+  if(!currentProfile) return [];
+  if(!currentProfile.achievements) currentProfile.achievements = [];
+  const newly = [];
+  for(const a of ACHIEVEMENTS){
+    if(!currentProfile.achievements.includes(a.id) && a.test(currentProfile, ctx||{})){
+      currentProfile.achievements.push(a.id); newly.push(a);
+    }
+  }
+  if(newly.length){
+    try{ if(typeof persistProfileCoins==='function') await persistProfileCoins(); }catch(e){}
+    if(typeof coinToast==='function') newly.forEach(a=> coinToast(`🏅 ACHIEVEMENT: ${a.name}!`));
+  }
+  return newly;
+}
+function getAchievement(id){ return ACHIEVEMENTS.find(a=>a.id===id); }
 
 // --- buy ---
 async function buyItem(itemId){
   if(!currentUser || !currentProfile){ alert('log in to shop.'); return; }
   const item = getItem(itemId); if(!item) return;
+  if(item.vip && !currentProfile.vip){ shopMsg('VIP only — find the BIGSINO door first.', true); return; }
   if(!currentProfile.inventory) currentProfile.inventory = [];
   if(currentProfile.inventory.includes(itemId)){ shopMsg('you already own that.', true); return; }
   if(getCoins() < item.cost){ shopMsg('not enough coins.', true); return; }
@@ -54,6 +105,7 @@ async function buyItem(itemId){
   if(item.type==='flair') currentProfile.equippedFlair = itemId;
   await persistProfileCoins(); // also saves profile + leaderboard
   shopMsg('GOT IT! '+item.name, false);
+  if(typeof checkAchievements==='function') await checkAchievements();
   renderShop();
   renderFlexShelf();
 }
@@ -75,18 +127,22 @@ function shopMsg(text, bad){
 }
 
 // --- render the shop catalog ---
-async function renderShop(){
-  const wrap = document.getElementById('shopGrid'); if(!wrap) return;
+async function renderShop(opts){
+  opts = opts || {};
+  const wrap = document.getElementById(opts.gridId || 'shopGrid'); if(!wrap) return;
   if(!currentUser){ wrap.innerHTML='<div class="need-login">log in to browse the shop.</div>'; return; }
-  // get limited stock
   let stock = {};
   try{ const s = await window.storage.get('shop_stock', true); stock = s&&s.value?JSON.parse(s.value):{}; }catch(e){}
   const inv = currentProfile.inventory || [];
-  const groups = { title:'TITLES & BADGES', flair:'PROFILE FLAIR', trophy:'TROPHIES' };
+  // pick catalog: VIP store shows VIP_ITEMS, regular shows SHOP_ITEMS
+  const catalog = opts.vip ? VIP_ITEMS : SHOP_ITEMS;
+  const groups = { title:'TITLES & BADGES', flair: opts.vip?'NAME COLORS':'PROFILE FLAIR', trophy:'TROPHIES' };
   let html = '';
   for(const g of Object.keys(groups)){
+    const items = catalog.filter(i=>i.type===g);
+    if(!items.length) continue;
     html += `<div class="shop-cat">${groups[g]}</div><div class="shop-row">`;
-    SHOP_ITEMS.filter(i=>i.type===g).forEach(item=>{
+    items.forEach(item=>{
       const owned = inv.includes(item.id);
       const equipped = (currentProfile.equippedTitle===item.id) || (currentProfile.equippedFlair===item.id);
       let soldOut=false, stockLabel='';

@@ -74,6 +74,9 @@ async function initWalletForUser(){
 
   await persistProfileCoins();
 
+  // check for newly-earned achievements (LOADED, INSIDER, etc.)
+  if(typeof checkAchievements === 'function'){ try{ await checkAchievements(); }catch(e){} }
+
   if(bonusMsg){
     if(bonusMsg.pity && !bonusMsg.bonus){
       coinToast(`Broke? Here's ${PITY_COINS} GBD coins. Don't blow it all at once.`);

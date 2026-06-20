@@ -149,4 +149,7 @@
   else document.addEventListener('DOMContentLoaded', buildChief);
   // re-greet on login change
   document.addEventListener('hooligan-auth', ()=>{ /* no spam; greeting handled on load */ });
+
+  // let other scripts make Chief talk
+  window.chiefSay = function(text){ say(text, true); };
 })();

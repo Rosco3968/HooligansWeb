@@ -244,16 +244,6 @@ async function renderAds(){
     const off = parseInt(slot.dataset.adOffset||'0',10);
     let h=''; for(let i=0;i<c;i++){ h += adHTML(adsCache[(off+i)%adsCache.length]); }
     slot.innerHTML = h;
-    // wire secret door on the special ad's icon
-    slot.querySelectorAll('.ad').forEach(el=>{
-      const ad = adsCache.find(a=>a.id===el.dataset.adId);
-      if(ad && ad.special){
-        const trig = el.querySelector(ad.imgUrl ? '.ad-photo' : '.ad-icon');
-        if(trig){ trig.style.cursor='pointer'; let n=0,t=null;
-          trig.addEventListener('click',ev=>{ ev.stopPropagation(); n++; clearTimeout(t); t=setTimeout(()=>n=0,1100); if(n>=3){ n=0; if(typeof unlockSecretChat==='function') unlockSecretChat(); else window.location.href='chat.html#backchannel'; } });
-        }
-      }
-    });
   });
 }
 

@@ -111,6 +111,36 @@
   .flair-rgb{ animation:rgbname 2s linear infinite; }
   .flair-diamond{ color:#b9f2ff !important; text-shadow:0 0 6px #fff, 0 0 10px #19d3ff; }
   .flair-fire{ text-shadow:0 0 4px #ff7a00, 0 0 8px #c4161c; }
+
+  /* ===== secret golden door ===== */
+  #bigsinoDoor{ position:fixed; bottom:14px; left:14px; z-index:580; cursor:pointer; text-align:center; }
+  #bigsinoDoor .door-frame{ position:relative; width:46px; height:70px; background:#3a2c1c; border:2px solid #ffd700; border-radius:4px 4px 0 0; box-shadow:0 0 12px rgba(255,215,0,0.5); overflow:hidden; }
+  #bigsinoDoor .door-panel{ position:absolute; inset:3px; background:linear-gradient(180deg,#caa53c,#7a5a12); border:1px solid #5a4310; transform-origin:left center; transition:transform 0.8s ease-in; }
+  #bigsinoDoor .door-panel.open{ transform:perspective(120px) rotateY(-78deg); }
+  #bigsinoDoor .door-knob{ position:absolute; right:5px; top:50%; width:5px; height:5px; border-radius:50%; background:#fff8d0; }
+  #bigsinoDoor .door-glow{ position:absolute; inset:0; background:radial-gradient(circle at center, rgba(255,215,0,0.4), transparent 70%); animation:doorpulse 2s ease-in-out infinite; pointer-events:none; }
+  @keyframes doorpulse{ 0%,100%{ opacity:0.3; } 50%{ opacity:0.9; } }
+  #bigsinoDoor .door-label{ font-family:Impact,sans-serif; color:#ffd700; font-size:16px; margin-top:2px; text-shadow:0 0 6px rgba(255,215,0,0.8); }
+
+  /* ===== BIGSINO password gate ===== */
+  #bigsinoGate{ position:fixed; inset:0; z-index:950; display:flex; align-items:center; justify-content:center; }
+  #bigsinoGate .bg-flash{ position:absolute; inset:0; background:#000; animation:bgflash 0.5s steps(1) infinite; }
+  @keyframes bgflash{ 0%{ background:#000; } 50%{ background:#1a1500; } }
+  #bigsinoGate .bg-inner{ position:relative; text-align:center; padding:30px 26px; border:3px solid #ffd700; background:rgba(0,0,0,0.92); box-shadow:0 0 40px rgba(255,215,0,0.6); }
+  #bigsinoGate .bg-logo{ font-family:Impact,sans-serif; font-size:54px; letter-spacing:3px; color:#ffd700; text-shadow:0 0 16px #ffd700,0 0 30px #ff7a00; animation:goldpulse 1.2s ease-in-out infinite; }
+  @keyframes goldpulse{ 0%,100%{ filter:brightness(1); } 50%{ filter:brightness(1.5); } }
+  #bigsinoGate .bg-sub{ color:#caa53c; font-size:12px; margin:6px 0 16px; letter-spacing:1px; }
+  #bigsinoGate .bg-code{ display:flex; gap:10px; justify-content:center; }
+  #bigsinoGate .bg-d{ width:48px; height:60px; text-align:center; font-size:30px; font-family:Impact,sans-serif; background:#000; color:#ffd700; border:2px solid #ffd700; border-radius:6px; }
+  #bigsinoGate .bg-d:focus{ outline:none; box-shadow:0 0 12px #ffd700; }
+  #bigsinoGate .bg-msg{ min-height:18px; font-family:Impact,sans-serif; margin-top:12px; }
+  #bigsinoGate .bg-actions{ display:flex; gap:10px; justify-content:center; margin-top:10px; }
+  #bigsinoGate .bg-actions button{ font-family:Impact,sans-serif; padding:9px 18px; border:2px solid #ffd700; cursor:pointer; }
+  #bigsinoGate #bgEnter{ background:#ffd700; color:#000; }
+  #bigsinoGate #bgCancel{ background:#000; color:#ffd700; }
+  #bigsinoGate .bg-hint{ color:#666; font-size:10px; margin-top:12px; }
+  #bigsinoGate .shake{ animation:gateshake 0.5s; }
+  @keyframes gateshake{ 0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-6px);}80%{transform:translateX(6px);} }
 </style>
 </head>
 <body>
@@ -275,6 +305,7 @@
 <script src="chief.js"></script>
 <script src="junk.js"></script>
 <script src="shop.js"></script>
+<script src="bigsino-door.js"></script>
 <script src="casino.js"></script>
 </body>
 </html>
