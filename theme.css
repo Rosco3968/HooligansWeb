@@ -264,3 +264,15 @@ a:hover{ color: var(--amber); text-decoration: underline; }
 ::-webkit-scrollbar-track{ background:#111; }
 ::-webkit-scrollbar-thumb{ background: var(--red-deep); border:1px solid #000; }
 ::-webkit-scrollbar-thumb:hover{ background: var(--red); }
+
+/* ===== shop badges + flair (shared across profile/chat) ===== */
+.name-badge{ font-family:Impact,sans-serif; font-size:10px; padding:1px 5px; margin-left:5px; border-radius:3px; vertical-align:middle; }
+.badge-roller{ background:linear-gradient(90deg,#ffd700,#ff7a00); color:#000; }
+.badge-legend{ background:#c4161c; color:#fff; }
+.badge-degen{ background:#9b30ff; color:#fff; }
+.badge-chief{ background:#1b9e8f; color:#fff; }
+.flair-gold{ color:#ffd700 !important; text-shadow:0 0 4px rgba(255,215,0,0.6); }
+@keyframes rgbname{ 0%{color:#ff2079;}33%{color:#19d3ff;}66%{color:#00d65a;}100%{color:#ff2079;} }
+.flair-rgb{ animation:rgbname 2s linear infinite; }
+.flair-diamond{ color:#b9f2ff !important; text-shadow:0 0 6px #fff, 0 0 10px #19d3ff; }
+.flair-fire{ text-shadow:0 0 4px #ff7a00, 0 0 8px #c4161c; }

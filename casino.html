@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>:: THE CASINO :: Hooligans Portal ::</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  .coin-hud-bar{ background:#000; border:2px solid var(--amber); padding:8px 12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-family:Impact,sans-serif; }
+  .coin-hud-bar .lbl{ color:var(--steel); font-size:12px; }
+  #coinHud{ font-size:18px; color:#fff; }
+  .game-tabs{ display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; }
+  .gtab{ background:#222; border:1px solid #000; color:var(--steel); font-family:Impact,sans-serif; font-size:13px; padding:8px 14px; cursor:pointer; }
+  .gtab.on{ background:var(--red); color:#fff; }
+  .gpanel{ display:none; } .gpanel.on{ display:block; }
+  .gbox{ background:#0c0c0c; border:2px solid var(--red); box-shadow:0 0 0 1px #000; padding:14px; text-align:center; }
+  .gtitle{ font-family:Impact,sans-serif; color:var(--amber); font-size:20px; margin-bottom:8px; letter-spacing:1px; }
+  .bet-row{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; margin:12px 0; }
+  .bet-row label{ font-size:12px; color:var(--steel); }
+  .bet-row input{ width:80px; background:#000; color:var(--amber); border:1px solid #444; padding:6px; font-family:Impact,sans-serif; text-align:center; font-size:15px; }
+  .btn{ background:var(--teal); color:#fff; border:1px solid #000; font-family:Impact,sans-serif; font-size:14px; padding:9px 18px; cursor:pointer; }
+  .btn:hover{ background:#0c5a51; }
+  .btn:disabled{ background:#444; cursor:not-allowed; }
+  .btn-red{ background:var(--red); } .btn-red:hover{ background:var(--red-deep); }
+  .msg{ min-height:20px; font-family:Impact,sans-serif; margin-top:8px; font-size:15px; }
+  .win{ color:var(--teal); } .lose{ color:var(--red); }
+  .need-login{ background:var(--panel); border:1px solid var(--red); padding:12px; color:var(--steel); font-size:13px; }
+
+  /* slots */
+  .reels{ display:flex; gap:8px; justify-content:center; margin:14px 0; }
+  .reel{ width:64px; height:64px; background:#000; border:3px solid var(--amber); display:flex; align-items:center; justify-content:center; font-size:38px; overflow:hidden; }
+  .reel.spin{ animation: reelblur 0.4s linear infinite; }
+  @keyframes reelblur{ 0%{ transform:translateY(-4px); } 50%{ transform:translateY(4px);} 100%{ transform:translateY(-4px);} }
+
+  /* blackjack */
+  .bj-area{ display:flex; flex-direction:column; gap:10px; }
+  .bj-hand{ background:#06250f; border:1px solid #0a4a1d; padding:10px; min-height:70px; }
+  .bj-hand .lbl{ font-size:11px; color:var(--steel-dim); font-family:Verdana; text-align:left; }
+  .cards{ display:flex; gap:6px; justify-content:center; margin-top:5px; flex-wrap:wrap; }
+  .card{ width:42px; height:60px; background:#fff; border-radius:4px; color:#000; font-family:Georgia,serif; font-weight:bold; display:flex; align-items:center; justify-content:center; font-size:16px; position:relative; box-shadow:1px 1px 3px rgba(0,0,0,0.5); }
+  .card.red{ color:#c4161c; }
+  .card.back{ background:repeating-linear-gradient(45deg,#1b9e8f,#1b9e8f 5px,#0c5a51 5px,#0c5a51 10px); color:transparent; }
+
+  /* wheel */
+  #wheelCanvas{ display:block; margin:0 auto; max-width:100%; }
+
+  /* coin pusher */
+  #pusherCanvas{ display:block; margin:0 auto; background:#0a0a0a; border:1px solid #333; max-width:100%; touch-action:manipulation; }
+
+  .lb-table{ width:100%; border-collapse:collapse; }
+  .lb-table td{ border-bottom:1px solid #222; padding:4px 6px; font-size:12px; }
+  .lb-table .rk{ color:var(--amber); font-family:Impact,sans-serif; width:24px; text-align:center; }
+  .lb-table .sc{ text-align:right; color:var(--amber); font-family:Impact,sans-serif; }
+
+  /* ===== cluttered flashing gambling ad grid ===== */
+  .junk-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin:8px 0; }
+  .junk-grid.side{ grid-template-columns:repeat(2,1fr); }
+  .junk{ position:relative; height:54px; border:2px solid #000; overflow:hidden; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    font-family:Impact,sans-serif; font-size:10px; line-height:1.05; color:#fff;
+    text-shadow:1px 1px 0 #000; padding:2px; }
+  .junk:hover{ transform:scale(1.08); z-index:5; }
+  .junk .jt{ position:relative; z-index:2; }
+  .junk .jrays{ position:absolute; inset:-40%; background:repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,0.25) 0 7deg, transparent 7deg 14deg); animation:spin 8s linear infinite; }
+  @keyframes flashbg{ 0%{ filter:hue-rotate(0deg) saturate(2); } 100%{ filter:hue-rotate(360deg) saturate(2); } }
+  .junk.flash{ animation:flashbg 3s linear infinite; }
+  @keyframes shake{ 0%,100%{ transform:translate(0,0); } 25%{ transform:translate(-1px,1px);} 50%{ transform:translate(1px,-1px);} 75%{ transform:translate(-1px,-1px);} }
+  .junk.shake{ animation:shake 0.3s linear infinite, flashbg 4s linear infinite; }
+  @keyframes blinkfast{ 50%{ opacity:0.3; } }
+  .junk.blink{ animation:blinkfast 0.6s steps(1) infinite; }
+  .junk .corner{ position:absolute; top:0; right:0; background:#ff0; color:#000; font-size:7px; padding:0 2px; z-index:3; }
+  .junk .corner.lt{ left:0; right:auto; background:#0f0; }
+
+  /* Windows-95 "UH OH" popup */
+  .w95{ position:fixed; z-index:900; width:240px; background:#c0c0c0; border:2px solid #fff; border-right-color:#000; border-bottom-color:#000; box-shadow:3px 3px 0 rgba(0,0,0,0.4); font-family:Tahoma,Verdana,sans-serif; }
+  .w95-tb{ background:linear-gradient(90deg,#000080,#1084d0); color:#fff; font-weight:bold; font-size:12px; padding:3px 5px; display:flex; justify-content:space-between; align-items:center; cursor:default; }
+  .w95-tb .x{ background:#c0c0c0; color:#000; border:1px solid #fff; border-right-color:#000; border-bottom-color:#000; width:16px; height:14px; line-height:12px; text-align:center; font-size:11px; cursor:pointer; }
+  .w95-body{ padding:12px; text-align:center; color:#000; }
+  .w95-body .uh{ font-family:Impact,sans-serif; font-size:22px; color:#a00; margin-top:6px; }
+  .w95-body .sub{ font-size:11px; margin-top:4px; }
+  #skullCanvasWrap canvas{ display:block; margin:0 auto; }
+
+  /* ===== shop ===== */
+  .shop-cat{ font-family:Impact,sans-serif; color:var(--cyan); font-size:13px; margin:12px 0 5px; border-bottom:1px solid #333; }
+  .shop-row{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:7px; }
+  .shop-item{ background:#141414; border:1px solid #333; padding:8px; text-align:center; }
+  .si-name{ font-family:Impact,sans-serif; font-size:13px; color:#fff; }
+  .si-desc{ font-size:9px; color:var(--steel-dim); margin:3px 0 6px; min-height:24px; }
+  .shop-btn{ background:var(--teal); color:#fff; border:1px solid #000; font-family:Impact,sans-serif; font-size:11px; padding:5px 10px; cursor:pointer; width:100%; }
+  .shop-btn:hover{ background:#0c5a51; }
+  .shop-btn.equipped{ background:var(--amber); color:#000; }
+  .owned-tag{ color:var(--teal); font-family:Impact,sans-serif; font-size:11px; }
+  .soldout{ color:var(--red); font-family:Impact,sans-serif; font-size:11px; }
+  .limited{ color:var(--amber); font-size:9px; }
+  .flex-shelf-box{ background:#0a0a0a; border:1px solid #333; padding:8px; margin-bottom:10px; }
+  .flex-shelf{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; min-height:30px; align-items:center; }
+  .flex-item{ position:relative; font-size:26px; cursor:default; }
+  .flex-item .flex-tip{ display:none; position:absolute; bottom:120%; left:50%; transform:translateX(-50%); background:#000; color:#fff; font-size:10px; font-family:Verdana; padding:3px 6px; white-space:nowrap; border:1px solid var(--amber); z-index:5; }
+  .flex-item:hover .flex-tip{ display:block; }
+
+  /* name badges (also used on profile + chat) */
+  .name-badge{ font-family:Impact,sans-serif; font-size:10px; padding:1px 5px; margin-left:5px; border-radius:3px; vertical-align:middle; }
+  .badge-roller{ background:linear-gradient(90deg,#ffd700,#ff7a00); color:#000; }
+  .badge-legend{ background:#c4161c; color:#fff; }
+  .badge-degen{ background:#9b30ff; color:#fff; }
+  .badge-chief{ background:#1b9e8f; color:#fff; }
+
+  /* flair effects on names */
+  .flair-gold{ color:#ffd700 !important; text-shadow:0 0 4px rgba(255,215,0,0.6); }
+  @keyframes rgbname{ 0%{color:#ff2079;}33%{color:#19d3ff;}66%{color:#00d65a;}100%{color:#ff2079;} }
+  .flair-rgb{ animation:rgbname 2s linear infinite; }
+  .flair-diamond{ color:#b9f2ff !important; text-shadow:0 0 6px #fff, 0 0 10px #19d3ff; }
+  .flair-fire{ text-shadow:0 0 4px #ff7a00, 0 0 8px #c4161c; }
+</style>
+</head>
+<body>
+
+<div class="util-bar">
+  <div class="util-links">
+    <a href="index.html">Home</a><a href="crew.html">Crew</a><a href="ads.html">Sponsors</a><a href="chat.html">Live Chat</a><a href="arcade.html">Arcade</a><a href="casino.html">Casino</a><a href="guestbook.html">Guestbook</a>
+  </div>
+  <div class="util-account" id="acctStrip"></div>
+</div>
+
+<div class="masthead">
+  <div class="logo" data-cfg="siteTitle">HOOLI<span class="gg">GANS</span><span class="dot">.</span></div>
+  <div class="tagline-mini" data-cfg="siteTagline"></div>
+</div>
+<div class="flame-rule"></div>
+
+<nav class="topnav">
+  <a href="index.html">HOME</a><a href="crew.html">THE CREW</a><a href="ads.html">SPONSORS</a><a href="chat.html">LIVE CHAT</a><a href="arcade.html">ARCADE</a><a href="casino.html">CASINO</a><a href="guestbook.html">GUESTBOOK</a>
+</nav>
+
+<div class="marq"><div class="marq-t"><span class="i">★ THE GBD CASINO ★ FAKE COINS, REAL GLORY ★ DAILY BONUS FOR SHOWING UP ★ HIT ZERO &amp; GET 10 FREE ★ GBD ★</span><span class="i">★ THE GBD CASINO ★ FAKE COINS, REAL GLORY ★ DAILY BONUS FOR SHOWING UP ★ HIT ZERO &amp; GET 10 FREE ★ GBD ★</span></div></div>
+
+<div class="portal">
+  <div class="col-left">
+    <div class="junk-grid side" data-junk="10"></div>
+    <div class="box"><div class="box-h">THE CASINO</div><div class="box-b" style="font-size:11px;">
+      All games use <b style="color:var(--amber);">GBD coins</b> — totally fake, no real money. Show up daily for a streak bonus. Broke? You get 10 free.
+    </div></div>
+    <div class="junk-grid side" data-junk="8"></div>
+    <div data-ad-slot data-ad-count="2" data-ad-offset="0"></div>
+  </div>
+
+  <div class="col-main">
+    <div class="coin-hud-bar">
+      <span class="lbl">YOUR WALLET</span>
+      <span id="coinHud">—</span>
+    </div>
+
+    <div class="junk-grid" data-junk="12"></div>
+
+    <div id="casinoLogin" class="need-login" style="display:none;">
+      Log in (JOIN up top) to get your 250 starter coins and play.
+    </div>
+
+    <div id="casinoGames" style="display:none;">
+      <div class="game-tabs">
+        <button class="gtab" data-g="slots" onclick="gTab('slots')">🎰 SLOTS</button>
+        <button class="gtab" data-g="blackjack" onclick="gTab('blackjack')">🃏 BLACKJACK</button>
+        <button class="gtab" data-g="wheel" onclick="gTab('wheel')">🎡 WHEEL</button>
+        <button class="gtab" data-g="pusher" onclick="gTab('pusher')">🪙 COIN PUSHER</button>
+        <button class="gtab" data-g="shop" onclick="gTab('shop')">🛒 SHOP</button>
+      </div>
+
+      <!-- SLOTS -->
+      <div class="gpanel" id="gp-slots">
+        <div class="gbox">
+          <div class="gtitle">GBD SLOTS</div>
+          <div class="reels"><div class="reel" id="r0">🍒</div><div class="reel" id="r1">🔔</div><div class="reel" id="r2">💀</div></div>
+          <div class="bet-row">
+            <label>BET</label><input type="number" id="slotBet" value="10" min="1">
+            <button class="btn" id="slotSpin">SPIN</button>
+          </div>
+          <div class="msg" id="slotMsg"></div>
+          <div style="font-size:10px; color:var(--steel-dim); margin-top:6px;">3 skulls = 50x · 3 match = 20x · 2 match = 2x</div>
+        </div>
+      </div>
+
+      <!-- BLACKJACK -->
+      <div class="gpanel" id="gp-blackjack">
+        <div class="gbox">
+          <div class="gtitle">BLACKJACK</div>
+          <div class="bj-area">
+            <div class="bj-hand"><div class="lbl">DEALER</div><div class="cards" id="dealerCards"></div></div>
+            <div class="bj-hand"><div class="lbl">YOU</div><div class="cards" id="playerCards"></div></div>
+          </div>
+          <div class="bet-row">
+            <label>BET</label><input type="number" id="bjBet" value="10" min="1">
+            <button class="btn" id="bjDeal">DEAL</button>
+            <button class="btn" id="bjHit" disabled>HIT</button>
+            <button class="btn btn-red" id="bjStand" disabled>STAND</button>
+          </div>
+          <div class="msg" id="bjMsg"></div>
+        </div>
+      </div>
+
+      <!-- WHEEL -->
+      <div class="gpanel" id="gp-wheel">
+        <div class="gbox">
+          <div class="gtitle">WHEEL OF GBD</div>
+          <canvas id="wheelCanvas" width="240" height="240"></canvas>
+          <div class="bet-row">
+            <label>BET</label><input type="number" id="wheelBet" value="10" min="1">
+            <button class="btn" id="wheelSpin">SPIN</button>
+          </div>
+          <div class="msg" id="wheelMsg"></div>
+          <div style="font-size:10px; color:var(--steel-dim); margin-top:6px;">slices pay 0x, 1x, 2x, 3x, 5x, or 10x your bet</div>
+        </div>
+      </div>
+
+      <!-- COIN PUSHER -->
+      <div class="gpanel" id="gp-pusher">
+        <div class="gbox">
+          <div class="gtitle">COIN PUSHER</div>
+          <canvas id="pusherCanvas" width="320" height="260"></canvas>
+          <div class="bet-row">
+            <label>DROP COST: 5</label>
+            <button class="btn" id="pusherDrop">DROP COIN (5)</button>
+          </div>
+          <div class="msg" id="pusherMsg"></div>
+          <div style="font-size:10px; color:var(--steel-dim); margin-top:6px;">push coins off the edge to win them — each coin that falls = 5 back</div>
+        </div>
+      </div>
+
+      <!-- SHOP -->
+      <div class="gpanel" id="gp-shop">
+        <div class="gbox" style="text-align:left;">
+          <div class="gtitle" style="text-align:center;">🛒 THE GBD SHOP</div>
+          <div style="text-align:center; font-size:11px; color:var(--steel-dim); margin-bottom:8px;">spend coins on stuff that shows off on your profile, in chat, and on your flex shelf</div>
+          <div class="msg" id="shopMsg" style="text-align:center;"></div>
+          <div class="flex-shelf-box">
+            <div style="font-family:Impact,sans-serif; color:var(--amber); font-size:12px;">YOUR FLEX SHELF</div>
+            <div id="flexShelf" class="flex-shelf"></div>
+          </div>
+          <div id="shopGrid"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="junk-grid" data-junk="12"></div>
+  </div>
+
+  <div class="col-right">
+    <div class="junk-grid side" data-junk="8"></div>
+    <div class="box">
+      <div class="box-h teal">💰 RICHEST HOOLIGANS</div>
+      <div class="box-b" style="padding:0;">
+        <table class="lb-table" id="coinLb"><tr><td style="padding:10px;color:var(--steel-dim);">loading...</td></tr></table>
+      </div>
+    </div>
+    <div class="junk-grid side" data-junk="10"></div>
+    <div data-ad-slot data-ad-count="1" data-ad-offset="2"></div>
+  </div>
+</div>
+
+<div id="popupHost"></div>
+
+<div class="foot">
+  <div data-cfg="footerLine1"></div>
+  <div data-cfg="footerLine2" style="margin-top:3px;"></div>
+  <div style="margin-top:8px;"><a id="adminLink" class="admin-dot" href="javascript:void(0)">·</a></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="portal.js"></script>
+<script src="wallet.js"></script>
+<script src="chief.js"></script>
+<script src="junk.js"></script>
+<script src="shop.js"></script>
+<script src="casino.js"></script>
+</body>
+</html>

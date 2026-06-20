@@ -69,3 +69,27 @@ You ALSO get inline [del] buttons in chat and on the guestbook while logged in a
 - To change the admin email later, edit ADMIN_EMAIL at the top of portal.js.
 - Realtime Database "test mode" rules: you already set them to permanent (true/true).
   That means anyone with the link can read/write — fine for a friend crew.
+
+====================================================
+## THE CASINO + SHOP (new)
+====================================================
+
+CASINO page (in the nav). All games use fake GBD coins — no real money.
+- New players start with 250 coins.
+- DAILY BONUS by login streak: more consecutive days = bigger bonus (caps at 100/day).
+- Broke? Hit 0 and you're auto-given 10 coins.
+- Games: SLOTS, BLACKJACK, WHEEL OF GBD, COIN PUSHER. Richest-Hooligans leaderboard.
+- The page is intentionally cluttered with flashing fake gambling ads. Clicking one
+  pops a "UH OH" window with a spinning skull and snatches 10 coins (capped, just a gag).
+
+THE SHOP (tab on the casino page): spend coins to show off.
+- TITLES/BADGES (show next to your name on profile + chat), PROFILE FLAIR (gold/RGB/
+  flame/diamond name effects), and TROPHIES (shown on your profile + flex shelf).
+- Some items are LIMITED / one-time (e.g. FOUNDER #1-5, the 1-of-1 Diamond Aura).
+- Owned items show on your profile card, beside your name in chat, and on your flex shelf.
+
+ADMIN: a COINS tab lets you (Rosco3968@gmail.com) hand out coins to one person or
+everyone at once — your giveaway feature.
+
+NEW FILES in this version: casino.html, casino.js, wallet.js, junk.js, shop.js
+(plus all pages updated with the CASINO nav link + wallet).

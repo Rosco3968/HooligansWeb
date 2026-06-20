@@ -29,7 +29,7 @@
 
 <div class="util-bar">
   <div class="util-links">
-    <a href="index.html">Home</a><a href="crew.html">Crew</a><a href="ads.html">Sponsors</a><a href="chat.html">Live Chat</a><a href="arcade.html">Arcade</a><a href="guestbook.html">Guestbook</a>
+    <a href="index.html">Home</a><a href="crew.html">Crew</a><a href="ads.html">Sponsors</a><a href="chat.html">Live Chat</a><a href="arcade.html">Arcade</a><a href="casino.html">Casino</a><a href="guestbook.html">Guestbook</a>
   </div>
   <div class="util-account" id="acctStrip"></div>
 </div>
@@ -41,7 +41,7 @@
 <div class="flame-rule"></div>
 
 <nav class="topnav">
-  <a href="index.html">HOME</a><a href="crew.html">THE CREW</a><a href="ads.html">SPONSORS</a><a href="chat.html">LIVE CHAT</a><a href="arcade.html">ARCADE</a><a href="guestbook.html">GUESTBOOK</a>
+  <a href="index.html">HOME</a><a href="crew.html">THE CREW</a><a href="ads.html">SPONSORS</a><a href="chat.html">LIVE CHAT</a><a href="arcade.html">ARCADE</a><a href="casino.html">CASINO</a><a href="guestbook.html">GUESTBOOK</a>
 </nav>
 
 <div class="portal" style="grid-template-columns:1fr;">
@@ -59,6 +59,7 @@
           <div class="atabs">
             <button class="atab" data-tab="text" onclick="aTab('text')">SITE TEXT</button>
             <button class="atab" data-tab="ads" onclick="aTab('ads')">ADS</button>
+            <button class="atab" data-tab="coins" onclick="aTab('coins')">COINS</button>
             <button class="atab" data-tab="mod" onclick="aTab('mod')">MODERATION</button>
           </div>
 
@@ -77,6 +78,18 @@
             <div class="linkhelp" style="margin-bottom:8px;">Each ad: edit text, emoji, colors, and an optional image link (blank = emoji look). Need a link? <a href="https://postimages.org" target="_blank" rel="noopener">postimages.org</a>.</div>
             <div id="adEditors"></div>
             <div class="savebar"><button onclick="saveAdsAdmin()">SAVE ALL ADS</button></div>
+          </div>
+
+          <div class="apanel" id="ap-coins">
+            <div class="linkhelp" style="margin-bottom:8px;">Hand out GBD coins — to one hooligan or everyone at once. Pure giveaway.</div>
+            <div class="fg">
+              <label>Give to</label>
+              <select id="coinTarget" style="width:100%; background:#000; color:var(--steel); border:1px solid #444; padding:7px; font-family:Verdana,sans-serif;"></select>
+            </div>
+            <div class="fg"><label>Amount</label><input type="text" id="coinAmount" placeholder="e.g. 100"></div>
+            <div class="savebar"><button onclick="adminGiveCoins()">DROP COINS</button></div>
+            <div class="ttl" style="font-family:Impact,sans-serif; color:var(--amber); margin-top:10px;">CURRENT BALANCES</div>
+            <div id="coinBalances"></div>
           </div>
 
           <div class="apanel" id="ap-mod">
@@ -106,6 +119,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script src="portal.js"></script>
+<script src="wallet.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

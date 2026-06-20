@@ -107,6 +107,9 @@ async function postMessage(payload){
       uid: currentUser.uid,
       handle: currentProfile?.handle || 'hooligan',
       color: currentProfile?.nameColor || '#ffb000',
+      title: currentProfile?.equippedTitle || null,
+      flair: currentProfile?.equippedFlair || null,
+      founderNum: currentProfile?.founderNum || null,
       time: Date.now()
     }, payload));
     if(msgs.length > MAX_CHAT) msgs = msgs.slice(msgs.length - MAX_CHAT);
@@ -136,13 +139,15 @@ function renderChat(msgs){
   box.innerHTML = msgs.map(m=>{
     const t = new Date(m.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
     const delBtn = isAdmin ? `<span class="del" onclick="adminDeleteMsg('${m.id}')">[del]</span>` : '';
+    const badge = (typeof titleBadgeHTML==='function' && m.title) ? titleBadgeHTML({equippedTitle:m.title, founderNum:m.founderNum}) : '';
+    const flairCls = (typeof flairClass==='function' && m.flair) ? flairClass({equippedFlair:m.flair}) : '';
     let body;
     if(m.type === 'img'){
       body = `<img class="cimg" src="${escapeHtml(m.url)}" loading="lazy" onerror="this.replaceWith(document.createTextNode('[broken image link]'))">`;
     }else{
       body = escapeHtml(m.text);
     }
-    return `<div class="cmsg"><span class="who" style="color:${escapeHtml(m.color||'#ffb000')}">${escapeHtml(m.handle)}</span><span class="tm">${t}</span>${delBtn}<br>${body}</div>`;
+    return `<div class="cmsg"><span class="who ${flairCls}" style="color:${escapeHtml(m.color||'#ffb000')}">${escapeHtml(m.handle)}</span>${badge}<span class="tm">${t}</span>${delBtn}<br>${body}</div>`;
   }).join('');
   if(atBottom) box.scrollTop = box.scrollHeight;
 }

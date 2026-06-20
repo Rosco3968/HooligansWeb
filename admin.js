@@ -27,6 +27,7 @@ function aTab(tab){
   document.querySelectorAll('.apanel').forEach(p=> p.classList.toggle('on', p.id==='ap-'+tab));
   if(tab==='text') fillText();
   if(tab==='ads') fillAds();
+  if(tab==='coins') fillCoins();
   if(tab==='mod') fillMod();
 }
 
@@ -81,6 +82,37 @@ async function saveAdsAdmin(){
     block.querySelectorAll('[data-f]').forEach(inp=>{ ad[inp.dataset.f] = inp.value; });
   });
   try{ await saveAds(); toast('Ads saved.'); }catch(e){ toast('Save failed', true); }
+}
+
+// ---- coins giveaway ----
+async function fillCoins(){
+  const sel = document.getElementById('coinTarget');
+  const bal = document.getElementById('coinBalances');
+  try{
+    const res = await window.storage.get('member_index', true);
+    const idx = res && res.value ? JSON.parse(res.value) : {};
+    const uids = Object.keys(idx);
+    sel.innerHTML = '<option value="__ALL__">★ EVERYONE</option>' +
+      uids.map(u=>`<option value="${u}">${escapeHtml(idx[u].handle||u)}</option>`).join('');
+    const lbRes = await window.storage.get('coin_leaderboard', true);
+    const board = lbRes && lbRes.value ? JSON.parse(lbRes.value) : {};
+    const arr = Object.values(board).sort((a,b)=>b.coins-a.coins);
+    bal.innerHTML = arr.length
+      ? arr.map(e=>`<div class="arow"><div class="info"><b style="color:#fff;">${escapeHtml(e.handle||'?')}</b></div><div style="color:var(--amber);font-family:Impact,sans-serif;">${e.coins} 💰</div></div>`).join('')
+      : '<div style="color:var(--steel-dim);">no players yet.</div>';
+  }catch(e){ sel.innerHTML='<option>couldn\'t load</option>'; }
+}
+
+async function adminGiveCoins(){
+  const target = document.getElementById('coinTarget').value;
+  const amount = Math.floor(Number(document.getElementById('coinAmount').value));
+  if(!amount || amount === 0){ toast('Enter an amount', true); return; }
+  const ok = await adminGrantCoins(target, amount);
+  if(ok){
+    toast(target==='__ALL__' ? `Gave ${amount} coins to everyone!` : `Gave ${amount} coins.`);
+    document.getElementById('coinAmount').value='';
+    fillCoins();
+  }else{ toast('Giveaway failed', true); }
 }
 
 // ---- moderation ----

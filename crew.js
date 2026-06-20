@@ -6,6 +6,19 @@
 
 let editingProfile = null;
 
+// show owned trophies on a profile card
+function trophyShelfHTML(p){
+  if(typeof SHOP_ITEMS === 'undefined') return '';
+  const inv = p.inventory || [];
+  const trophies = inv.map(id => SHOP_ITEMS.find(i=>i.id===id)).filter(i=>i && i.type==='trophy');
+  if(!trophies.length) return '';
+  return `<div class="pcard-trophies" style="margin-top:6px; font-size:18px;">${trophies.map(t=>{
+    let lbl = t.icon;
+    if(t.id==='l_founder' && p.founderNum) lbl = `🏆#${p.founderNum}`;
+    return `<span title="${escapeHtml(t.name)}">${lbl}</span>`;
+  }).join(' ')}</div>`;
+}
+
 document.addEventListener('hooligan-auth', (e) => {
   refreshCrewPage();
 });
@@ -36,6 +49,8 @@ function profileCardHTML(p, opts){
   const accent = p.cardAccent || '#c4161c';
   const bg = p.cardBg || '#141414';
   const nameColor = p.nameColor || '#ffb000';
+  const titleBadge = (typeof titleBadgeHTML==='function') ? titleBadgeHTML(p) : '';
+  const flairCls = (typeof flairClass==='function') ? flairClass(p) : '';
   const pic = p.pic || 'https://placehold.co/230x170/000/c4161c?text=NO+PIC';
   const extra = (p.extraPics && p.extraPics.length)
     ? `<div class="pcard-thumbs">${p.extraPics.map(u=>`<img src="${escapeHtml(u)}" loading="lazy" onerror="this.style.display='none'">`).join('')}</div>` : '';
@@ -52,12 +67,13 @@ function profileCardHTML(p, opts){
   }
 
   return `<div class="pcard" style="box-shadow:0 0 0 1px ${accent}; background:${bg};">
-    <div class="pcard-h" style="background:linear-gradient(180deg,${accent},#000); color:${nameColor};">${escapeHtml(p.handle)}${opts.mine?' <span style="font-size:10px;color:#fff;">(you)</span>':''}</div>
+    <div class="pcard-h" style="background:linear-gradient(180deg,${accent},#000); color:${nameColor};"><span class="${flairCls}">${escapeHtml(p.handle)}</span>${titleBadge}${opts.mine?' <span style="font-size:10px;color:#fff;">(you)</span>':''}</div>
     <img class="pcard-pic" src="${escapeHtml(pic)}" alt="${escapeHtml(p.handle)}" onerror="this.src='https://placehold.co/230x170/000/c4161c?text=BROKEN+LINK'">
     <div class="pcard-b">
       ${p.statusText?`<div class="pcard-status">“${escapeHtml(p.statusText)}”</div>`:''}
       <div class="pcard-bio">${p.bio?escapeHtml(p.bio):'<span style="color:var(--steel-dim);font-style:italic;">no bio yet...</span>'}</div>
       ${metaHTML}
+      ${trophyShelfHTML(p)}
       ${extra}
       ${buttons}
     </div>
